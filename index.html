@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Estudio — Ingeniería Industrial</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1a3a5c;--blue2:#2563a8;--blue3:#3b82f6;--blue4:#93c5fd;
+  --green:#0f5132;--green2:#198754;--green3:#20c997;--green4:#a3e6cd;
+  --amber:#92400e;--amber2:#d97706;--amber3:#fbbf24;--amber4:#fde68a;
+  --red:#7f1d1d;--red2:#dc2626;--red3:#f87171;--red4:#fee2e2;
+  --purple:#3b0764;--purple2:#7c3aed;--purple3:#a78bfa;--purple4:#ede9fe;
+  --bg:#0f172a;--bg2:#1e293b;--bg3:#334155;--bg4:#475569;
+  --text:#f1f5f9;--text2:#cbd5e1;--text3:#94a3b8;
+  --card:#1e293b;--border:#334155;
+}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Segoe UI',system-ui,sans-serif;
+  min-height:100vh;line-height:1.6;
+}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,#0f172a 0%,#1a3a5c 50%,#0f2a1a 100%);
+  border-bottom:1px solid var(--border);
+  padding:2.5rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563a8' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-icon{font-size:3rem;margin-bottom:0.75rem;display:block;position:relative}
+.hero h1{font-size:1.75rem;font-weight:700;color:#fff;margin-bottom:0.35rem;letter-spacing:-0.02em;position:relative}
+.hero p{font-size:0.95rem;color:var(--text3);max-width:560px;margin:0 auto 1rem;position:relative}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;position:relative}
+.badge{font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:0.04em;text-transform:uppercase}
+.badge-blue{background:#1e3a5f;color:#93c5fd;border:1px solid #2563a8}
+.badge-green{background:#0a2e1f;color:#6ee7b7;border:1px solid #198754}
+.badge-amber{background:#2d1f06;color:#fcd34d;border:1px solid #d97706}
+.badge-purple{background:#1e0a3c;color:#c4b5fd;border:1px solid #7c3aed}
+
+/* ── LAYOUT ── */
+.main{max-width:900px;margin:0 auto;padding:1.5rem 1rem 3rem}
+
+/* ── NAV TABS ── */
+.tab-nav{
+  display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:6px;
+}
+.tab-btn{
+  flex:1;min-width:120px;padding:0.6rem 0.75rem;border:none;border-radius:10px;
+  font-size:0.78rem;font-weight:600;cursor:pointer;
+  background:transparent;color:var(--text3);transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.tab-btn:hover{background:var(--bg3);color:var(--text)}
+.tab-btn.active{color:#fff}
+.tab-btn[data-cat="iso"].active{background:#1e3a5f;color:#93c5fd}
+.tab-btn[data-cat="lean"].active{background:#052e16;color:#6ee7b7}
+.tab-btn[data-cat="erg"].active{background:#2d1f06;color:#fcd34d}
+.tab-btn[data-cat="seg"].active{background:#1f0a0a;color:#fca5a5}
+.tab-btn[data-cat="gest"].active{background:#1a0a2e;color:#c4b5fd}
+
+/* ── SECTION PANEL ── */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── TOPIC CARD ── */
+.topic-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  margin-bottom:1rem;overflow:hidden;
+}
+.topic-header{
+  padding:1rem 1.25rem;cursor:pointer;display:flex;align-items:center;
+  gap:12px;transition:background 0.15s;user-select:none;
+}
+.topic-header:hover{background:var(--bg3)}
+.topic-icon{font-size:1.4rem;flex-shrink:0}
+.topic-title-wrap{flex:1}
+.topic-title{font-size:0.95rem;font-weight:700;color:var(--text)}
+.topic-subtitle{font-size:0.78rem;color:var(--text3);margin-top:2px}
+.topic-arrow{font-size:0.9rem;color:var(--text3);transition:transform 0.25s;flex-shrink:0}
+.topic-card.open .topic-arrow{transform:rotate(90deg)}
+
+.topic-body{
+  display:none;padding:0 1.25rem 1.25rem;border-top:1px solid var(--border);
+}
+.topic-card.open .topic-body{display:block;padding-top:1.1rem}
+
+/* ── CONTENT BLOCKS ── */
+.def-box{
+  background:var(--bg);border-left:3px solid var(--blue2);
+  border-radius:0 8px 8px 0;padding:0.85rem 1rem;margin-bottom:1rem;
+  font-size:0.88rem;color:var(--text2);line-height:1.7;
+}
+.def-box strong{color:var(--blue4);display:block;font-size:0.75rem;
+  text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px}
+
+.key-points{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:1rem}
+.key-points li{
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  padding:0.65rem 0.9rem;font-size:0.85rem;color:var(--text2);
+  display:flex;align-items:flex-start;gap:8px;line-height:1.55;
+}
+.key-points li::before{content:'▸';color:var(--blue3);flex-shrink:0;margin-top:1px}
+
+.formula-box{
+  background:#0a1628;border:1px solid #1e3a5f;border-radius:10px;
+  padding:1rem 1.25rem;margin-bottom:1rem;font-family:'Courier New',monospace;
+  font-size:0.88rem;color:#93c5fd;
+}
+.formula-box .f-label{font-family:'Segoe UI',sans-serif;font-size:0.72rem;
+  color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;display:block}
+
+.tip-box{
+  background:#1f1a05;border:1px solid #d97706;border-radius:10px;
+  padding:0.85rem 1rem;margin-bottom:1rem;
+  font-size:0.85rem;color:#fde68a;line-height:1.65;
+}
+.tip-box::before{content:'💡 Tip clave: ';font-weight:700}
+
+.alert-box{
+  background:#1a0505;border:1px solid #dc2626;border-radius:10px;
+  padding:0.85rem 1rem;margin-bottom:1rem;
+  font-size:0.85rem;color:#fecaca;line-height:1.65;
+}
+.alert-box::before{content:'⚠️ Cuidado: ';font-weight:700}
+
+.compare-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;
+}
+.compare-col{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:0.85rem}
+.compare-col h4{font-size:0.78rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.04em;margin-bottom:8px}
+.compare-col ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.compare-col ul li{font-size:0.82rem;color:var(--text2);display:flex;gap:6px}
+.compare-col ul li::before{content:'•';flex-shrink:0}
+
+.section-title{
+  font-size:0.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.06em;color:var(--text3);margin:1rem 0 0.5rem;
+}
+
+/* ── FLASHCARD MINI QUIZ ── */
+.mini-quiz{
+  background:var(--bg);border:1px dashed var(--border);border-radius:12px;
+  padding:1rem;margin-top:1rem;
+}
+.mini-quiz-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.05em;color:var(--text3);margin-bottom:0.75rem;display:flex;align-items:center;gap:6px}
+.mq-question{font-size:0.88rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.55;font-weight:600}
+.mq-options{display:flex;flex-direction:column;gap:6px;margin-bottom:0.75rem}
+.mq-opt{
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  padding:0.55rem 0.85rem;font-size:0.83rem;color:var(--text2);
+  cursor:pointer;text-align:left;transition:all 0.15s;display:flex;gap:8px;align-items:center;
+}
+.mq-opt:hover:not(:disabled){background:var(--bg3);color:var(--text);border-color:var(--blue3)}
+.mq-opt.correct{background:#052e16;border-color:#198754;color:#a7f3d0}
+.mq-opt.wrong{background:#450a0a;border-color:#dc2626;color:#fecaca}
+.mq-opt.show-ans{background:#052e16;border-color:#198754;color:#a7f3d0}
+.mq-opt:disabled{cursor:default}
+.mq-feedback{font-size:0.82rem;padding:0.6rem 0.85rem;border-radius:8px;display:none;line-height:1.55}
+.mq-feedback.ok{background:#052e16;color:#d1fae5;border:1px solid #198754;display:block}
+.mq-feedback.err{background:#1f0505;color:#fee2e2;border:1px solid #991b1b;display:block}
+.mq-reset{background:transparent;border:1px solid var(--border);border-radius:7px;
+  padding:5px 12px;font-size:0.75rem;color:var(--text3);cursor:pointer;margin-top:8px;
+  transition:all 0.15s}
+.mq-reset:hover{border-color:var(--blue3);color:var(--blue4)}
+
+/* ── CAT TAG ── */
+.cat-tag{
+  display:inline-flex;align-items:center;gap:6px;font-size:0.7rem;font-weight:700;
+  padding:4px 12px;border-radius:20px;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:1rem;
+}
+.tag-iso{background:#0c1e35;color:#93c5fd;border:1px solid #2563a8}
+.tag-lean{background:#052e16;color:#6ee7b7;border:1px solid #198754}
+.tag-erg{background:#2d1f06;color:#fcd34d;border:1px solid #d97706}
+.tag-seg{background:#1f0a0a;color:#fca5a5;border:1px solid #dc2626}
+.tag-gest{background:#1a0a2e;color:#c4b5fd;border:1px solid #7c3aed}
+
+/* ── CHEAT SHEET ── */
+.cheatsheet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.5rem}
+.cheat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:0.85rem;
+}
+.cheat-card h3{font-size:0.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.05em;margin-bottom:6px}
+.cheat-card p{font-size:0.82rem;color:var(--text2);line-height:1.5}
+.cheat-card .code{font-family:'Courier New',monospace;font-size:0.8rem;
+  color:#93c5fd;background:#0a1628;padding:3px 7px;border-radius:5px;display:inline-block;margin-top:4px}
+
+/* SCROLL */
+@media(min-width:900px){.main{padding:1.5rem 2rem 3rem}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-icon">📚</span>
+  <h1>Guía de Estudio — Ingeniería Industrial</h1>
+  <p>Todo lo que necesitas para aprobar el examen · Teoría + Fórmulas + Mini-quizzes por tema</p>
+  <div class="hero-badges">
+    <span class="badge badge-blue">5 Categorías</span>
+    <span class="badge badge-green">20 Temas</span>
+    <span class="badge badge-amber">Fórmulas clave</span>
+    <span class="badge badge-purple">Mini quizzes</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- NAV TABS -->
+  <div class="tab-nav">
+    <button class="tab-btn active" data-cat="iso" onclick="switchTab('iso')">🏅 Normas ISO</button>
+    <button class="tab-btn" data-cat="lean" onclick="switchTab('lean')">♻️ Lean Mfg.</button>
+    <button class="tab-btn" data-cat="erg" onclick="switchTab('erg')">🦺 Ergonomía</button>
+    <button class="tab-btn" data-cat="seg" onclick="switchTab('seg')">📊 Calidad</button>
+    <button class="tab-btn" data-cat="gest" onclick="switchTab('gest')">🧭 Gestión</button>
+  </div>
+
+  <!-- ============================== PANEL ISO ============================== -->
+  <div class="panel active" id="panel-iso">
+
+    <!-- ISO 9001 -->
+    <div class="topic-card" id="t-iso1">
+      <div class="topic-header" onclick="toggle('t-iso1')">
+        <span class="topic-icon">🏆</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">ISO 9001:2015 — Gestión de la Calidad</div>
+          <div class="topic-subtitle">El estándar más implementado del mundo · +1 millón de empresas</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-iso">Normas ISO</span>
+        <div class="def-box">
+          <strong>Definición</strong>
+          ISO 9001:2015 define los requisitos para un <strong>Sistema de Gestión de la Calidad (SGC)</strong>. Su objetivo es demostrar que la organización produce consistentemente productos y servicios que satisfacen los requisitos del cliente y los legales aplicables.
+        </div>
+        <p class="section-title">Principios fundamentales</p>
+        <ul class="key-points">
+          <li>Enfoque en el cliente — comprender y superar sus expectativas</li>
+          <li>Liderazgo — la alta dirección debe comprometerse con el SGC</li>
+          <li>Compromiso de las personas — todas las personas añaden valor</li>
+          <li>Enfoque a procesos — gestionar actividades como procesos interrelacionados</li>
+          <li>Mejora continua — ciclo PHVA (Planear, Hacer, Verificar, Actuar)</li>
+          <li>Toma de decisiones basada en evidencia — datos y análisis</li>
+          <li>Gestión de las relaciones — con proveedores estratégicos</li>
+        </ul>
+        <p class="section-title">Cláusula 10.2 — No Conformidades y Acciones Correctivas</p>
+        <ul class="key-points">
+          <li><strong>Paso 1:</strong> Contención inmediata — aislar y cuarentenar el producto defectuoso</li>
+          <li><strong>Paso 2:</strong> Notificación formal al cliente con plan de acción</li>
+          <li><strong>Paso 3:</strong> Análisis de causa raíz (8D / Ishikawa / 5 Porqués)</li>
+          <li><strong>Paso 4:</strong> Implementar acción correctiva que elimina la causa raíz</li>
+          <li><strong>Paso 5:</strong> Verificar eficacia — lote piloto confirma que desapareció el defecto</li>
+          <li><strong>Paso 6:</strong> Documentar todo en el sistema de registros</li>
+        </ul>
+        <div class="tip-box">Cuando el cliente exige certificación de calidad para exportar a Europa → ISO 9001 es siempre la primera respuesta.</div>
+        <div class="mini-quiz" id="mq-iso1">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">Una empresa dominicana de calzado quiere exportar a Europa. Sus clientes le exigen evidencia de gestión de calidad. ¿Qué norma implementa primero?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-iso1',0,1)"><span>A</span> ISO 14001:2015 – Gestión Ambiental</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-iso1',1,1)"><span>B</span> ISO 9001:2015 – Gestión de la Calidad</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-iso1',2,1)"><span>C</span> ISO 45001:2018 – Seguridad y Salud</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-iso1',3,1)"><span>D</span> ISO 27001 – Seguridad de la Información</button>
+          </div>
+          <div class="mq-feedback" id="mq-iso1-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-iso1')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ISO 45001 -->
+    <div class="topic-card" id="t-iso2">
+      <div class="topic-header" onclick="toggle('t-iso2')">
+        <span class="topic-icon">🦺</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">ISO 45001:2018 — Seguridad y Salud Ocupacional</div>
+          <div class="topic-subtitle">Reemplazó a OHSAS 18001 · Gestión sistemática de riesgos laborales</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-iso">Normas ISO</span>
+        <div class="def-box">
+          <strong>Definición</strong>
+          ISO 45001:2018 establece los requisitos para un <strong>Sistema de Gestión de SST (Seguridad y Salud en el Trabajo)</strong>. Su propósito es prevenir lesiones, enfermedades laborales y muertes, mejorando proactivamente el desempeño en SST.
+        </div>
+        <p class="section-title">Elementos clave del sistema</p>
+        <ul class="key-points">
+          <li>Identificación de peligros en cada puesto (agujas, pisos resbaladizos, posturas forzadas)</li>
+          <li>Evaluación del riesgo con matrices de probabilidad × impacto</li>
+          <li>Implementar controles: guardas en máquinas, antideslizantes, análisis ergonómico</li>
+          <li>Investigar cada incidente para encontrar causa raíz</li>
+          <li>Medir con KPIs como IFA (Índice de Frecuencia de Accidentes)</li>
+        </ul>
+        <div class="tip-box">Cuando hay accidentes laborales recurrentes o el Ministerio de Trabajo emite advertencia → ISO 45001 es la respuesta.</div>
+        <div class="alert-box">El Reglamento 522-06 dominicano establece mínimos legales, pero ISO 45001 provee el sistema de gestión para cumplirlos sistemáticamente.</div>
+      </div>
+    </div>
+
+    <!-- ISO 22000 -->
+    <div class="topic-card" id="t-iso3">
+      <div class="topic-header" onclick="toggle('t-iso3')">
+        <span class="topic-icon">🥑</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">ISO 22000:2018 — Inocuidad Alimentaria</div>
+          <div class="topic-subtitle">Trazabilidad completa de alimentos · HACCP integrado</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-iso">Normas ISO</span>
+        <div class="def-box">
+          <strong>Definición</strong>
+          ISO 22000:2018 es el estándar global para <strong>gestión de inocuidad alimentaria con trazabilidad completa</strong>. Integra el sistema HACCP (Hazard Analysis and Critical Control Points) y se aplica a toda la cadena alimentaria.
+        </div>
+        <p class="section-title">Trazabilidad en la práctica</p>
+        <ul class="key-points">
+          <li>Código QR por caja vinculado a base de datos de producción</li>
+          <li>Registro: finca de origen, fecha de cosecha, temperatura en empaque</li>
+          <li>Retiro de lote afectado en menos de 4 horas sin retirar toda la producción</li>
+          <li>Control de Puntos Críticos (PCC) en la cadena de frío</li>
+        </ul>
+        <div class="tip-box">Cuando el cliente no puede rastrear el origen del lote o lo retienen en aduanas → ISO 22000 + trazabilidad.</div>
+      </div>
+    </div>
+
+    <!-- ISO 50001 -->
+    <div class="topic-card" id="t-iso4">
+      <div class="topic-header" onclick="toggle('t-iso4')">
+        <span class="topic-icon">⚡</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">ISO 50001:2018 — Gestión de la Energía</div>
+          <div class="topic-subtitle">Reducciones del 10-30% en consumo energético documentadas</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-iso">Normas ISO</span>
+        <div class="def-box">
+          <strong>Definición</strong>
+          ISO 50001:2018 establece el <strong>Sistema de Gestión de la Energía (SGEn)</strong> para mejorar continuamente el desempeño energético, la eficiencia, el uso y el consumo de la energía.
+        </div>
+        <p class="section-title">Ciclo de mejora energética</p>
+        <ul class="key-points">
+          <li>Revisar el uso energético actual con medidores en cada equipo</li>
+          <li>Identificar los Usos Significativos de Energía (USE) — ej. compresores de refrigeración</li>
+          <li>Establecer líneas base y metas de reducción medibles</li>
+          <li>Implementar: mantenimiento de compresores, variadores VFD, aislamiento térmico</li>
+          <li>Medir y reportar mensualmente con indicadores de intensidad energética</li>
+        </ul>
+        <div class="tip-box">Cuando la empresa paga facturas de electricidad muy altas y quiere reducirlas sistemáticamente → ISO 50001.</div>
+      </div>
+    </div>
+
+    <!-- ISO 13485 -->
+    <div class="topic-card" id="t-iso5">
+      <div class="topic-header" onclick="toggle('t-iso5')">
+        <span class="topic-icon">💉</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">ISO 13485 — Dispositivos Médicos</div>
+          <div class="topic-subtitle">Device History Record · Trazabilidad por lote para FDA</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-iso">Normas ISO</span>
+        <div class="def-box">
+          <strong>Práctica clave: Device History Record (DHR)</strong>
+          Registro del Historial del Dispositivo que documenta de forma completa y trazable cada lote producido. Obligatorio para exportar a EE.UU. bajo regulación FDA.
+        </div>
+        <ul class="key-points">
+          <li>Registros de producción trazables por lote (quién, cuándo, con qué equipo)</li>
+          <li>Evidencia de cumplimiento de especificaciones de esterilidad</li>
+          <li>Control de cambios documentado</li>
+          <li>Calibración de equipos de medición</li>
+        </ul>
+        <div class="alert-box">La FDA puede prohibir exportaciones si los registros no son trazables. Un cuaderno manual no es suficiente.</div>
+      </div>
+    </div>
+
+  </div><!-- /panel-iso -->
+
+  <!-- ============================== PANEL LEAN ============================== -->
+  <div class="panel" id="panel-lean">
+
+    <!-- VSM -->
+    <div class="topic-card" id="t-lean1">
+      <div class="topic-header" onclick="toggle('t-lean1')">
+        <span class="topic-icon">🗺️</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">Value Stream Map (VSM)</div>
+          <div class="topic-subtitle">Visualiza dónde se pierde el tiempo · Revela todos los desperdicios</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-lean">Manufactura Lean</span>
+        <div class="def-box">
+          <strong>Definición</strong>
+          El VSM dibuja en un solo papel todo el flujo desde que entra la materia prima hasta que el producto llega al cliente. Muestra tiempos de ciclo, inventarios en proceso y flujo de información. Es la primera herramienta para iniciar una transformación Lean.
+        </div>
+        <p class="section-title">Elementos del VSM</p>
+        <ul class="key-points">
+          <li>Tiempos de ciclo de cada operación (VA — Valor Agregado)</li>
+          <li>Inventarios en proceso entre estaciones (triángulos de kaizen)</li>
+          <li>Tiempos de espera entre estaciones (NVA — No Valor Agregado)</li>
+          <li>Flujo de información con proveedores y clientes</li>
+          <li>Lead Time total vs. tiempo real de trabajo</li>
+        </ul>
+        <div class="tip-box">Si el 99% del Lead Time es tiempo de espera → el VSM lo hace visible de inmediato. Es el punto de partida de todo proyecto Lean.</div>
+        <div class="mini-quiz" id="mq-lean1">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">Una mueblería tiene 22 días de Lead Time pero solo 6 horas de trabajo real. ¿Qué herramienta Lean mapea visualmente dónde están los desperdicios?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-lean1',0,1)"><span>A</span> Sistema Kanban digital</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean1',1,1)"><span>B</span> Value Stream Map (VSM)</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean1',2,1)"><span>C</span> Aplicar 5S primero</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean1',3,1)"><span>D</span> Diagrama de Ishikawa</button>
+          </div>
+          <div class="mq-feedback" id="mq-lean1-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-lean1')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Takt Time -->
+    <div class="topic-card" id="t-lean2">
+      <div class="topic-header" onclick="toggle('t-lean2')">
+        <span class="topic-icon">⏱️</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">Takt Time — El latido del sistema</div>
+          <div class="topic-subtitle">Ritmo al que el cliente consume · Base del diseño de la línea</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-lean">Manufactura Lean</span>
+        <div class="formula-box">
+          <span class="f-label">Fórmula</span>
+          Takt Time = Tiempo Disponible Neto ÷ Demanda del Cliente<br><br>
+          Tiempo Neto = Tiempo turno − Descansos − Reuniones<br><br>
+          Ejemplo: (480 − 20 − 10) min ÷ 960 pzas = 0.469 min/pza = 28.1 seg/pza
+        </div>
+        <p class="section-title">¿Qué significa operativamente?</p>
+        <ul class="key-points">
+          <li>Cualquier operación con Tiempo de Ciclo > Takt Time = cuello de botella</li>
+          <li>Nº operarios = Suma de tiempos de ciclo ÷ Takt Time</li>
+          <li>Producir más rápido que el Takt = sobreproducción (desperdicio)</li>
+          <li>Producir más lento que el Takt = incumplimiento al cliente</li>
+        </ul>
+        <div class="tip-box">El Takt Time no incluye el tiempo de descansos, reuniones o paros planeados. Siempre usar tiempo neto disponible.</div>
+        <div class="mini-quiz" id="mq-lean2">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">Turno de 8 horas (480 min), con 20 min de descanso y 10 min de reunión. Demanda: 960 piezas. ¿Cuál es el Takt Time?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-lean2',0,1)"><span>A</span> 30 segundos (480÷960)</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean2',1,1)"><span>B</span> 28.1 segundos (450÷960)</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean2',2,1)"><span>C</span> 2.13 piezas/min</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean2',3,1)"><span>D</span> No se puede calcular sin saber nº de máquinas</button>
+          </div>
+          <div class="mq-feedback" id="mq-lean2-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-lean2')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5S -->
+    <div class="topic-card" id="t-lean3">
+      <div class="topic-header" onclick="toggle('t-lean3')">
+        <span class="topic-icon">🗂️</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">5S — Organización del Lugar de Trabajo</div>
+          <div class="topic-subtitle">Base de toda implementación Lean · Disciplina visual</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-lean">Manufactura Lean</span>
+        <ul class="key-points">
+          <li><strong>Seiri — Clasificar:</strong> eliminar lo innecesario del área de trabajo</li>
+          <li><strong>Seiton — Ordenar:</strong> un lugar para cada cosa, cada cosa en su lugar</li>
+          <li><strong>Seiso — Limpiar:</strong> limpiar es inspeccionar, detectar anomalías</li>
+          <li><strong>Seiketsu — Estandarizar:</strong> definir cómo debe verse el área siempre</li>
+          <li><strong>Shitsuke — Disciplina:</strong> mantener los estándares como hábito</li>
+        </ul>
+        <div class="tip-box">5S no es limpieza — es el fundamento visual que hace visibles los problemas y permite el flujo continuo.</div>
+      </div>
+    </div>
+
+    <!-- SMED -->
+    <div class="topic-card" id="t-lean4">
+      <div class="topic-header" onclick="toggle('t-lean4')">
+        <span class="topic-icon">🔧</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">SMED — Cambio en Menos de 10 Minutos</div>
+          <div class="topic-subtitle">Single Minute Exchange of Die · Shigeo Shingo / Toyota</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-lean">Manufactura Lean</span>
+        <div class="def-box">
+          <strong>Objetivo</strong>
+          Reducir los tiempos de cambio de referencia (setup) a menos de 10 minutos (un solo dígito). Permite producir lotes más pequeños con la misma eficiencia, eliminando inventario forzado.
+        </div>
+        <p class="section-title">3 pasos del SMED</p>
+        <ul class="key-points">
+          <li><strong>Paso 1 — Separar:</strong> actividades INTERNAS (solo con máquina parada) vs. EXTERNAS (con máquina corriendo)</li>
+          <li><strong>Paso 2 — Convertir:</strong> transformar internas en externas → precalentar moldes fuera mientras la máquina produce</li>
+          <li><strong>Paso 3 — Simplificar:</strong> conexiones rápidas, plantillas, aditamentos de ajuste rápido</li>
+        </ul>
+        <div class="tip-box">Reducir setup de 4 horas a 20 min = producir lotes 12× más pequeños con igual eficiencia. Reducciones típicas: 75-90%.</div>
+      </div>
+    </div>
+
+    <!-- OEE -->
+    <div class="topic-card" id="t-lean5">
+      <div class="topic-header" onclick="toggle('t-lean5')">
+        <span class="topic-icon">📈</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">OEE — Overall Equipment Effectiveness</div>
+          <div class="topic-subtitle">Disponibilidad × Rendimiento × Calidad · ISO 22400</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-lean">Manufactura Lean</span>
+        <div class="formula-box">
+          <span class="f-label">Fórmula OEE</span>
+          OEE = Disponibilidad × Rendimiento × Calidad<br><br>
+          Disponibilidad = (T. Disponible − T. Paro) ÷ T. Disponible<br>
+          Rendimiento = Producción real ÷ Producción teórica máxima<br>
+          Calidad = Unidades buenas ÷ Unidades totales producidas
+        </div>
+        <p class="section-title">Benchmarks de clase mundial</p>
+        <ul class="key-points">
+          <li>OEE ≥ 85% = Clase Mundial</li>
+          <li>Disponibilidad objetivo ≥ 90%</li>
+          <li>Rendimiento objetivo ≥ 95%</li>
+          <li>Calidad objetivo ≥ 99.5%</li>
+        </ul>
+        <div class="tip-box">Cuando hay OEE bajo → atacar primero el componente con mayor brecha. Si Disponibilidad = 72%, Rendimiento = 81%, Calidad = 80% → atacar Disponibilidad (más brecha) con TPM.</div>
+        <div class="mini-quiz" id="mq-lean3">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">PlastiDom: Disponibilidad 72%, Rendimiento 81%, Calidad 80%. OEE = 47%. ¿En cuál componente debe enfocarse primero?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-lean3',0,2)"><span>A</span> Rendimiento (81%) — subir velocidad</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean3',1,2)"><span>B</span> Calidad (80%) — reducir defectos</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean3',2,2)"><span>C</span> Disponibilidad (72%) — implementar TPM</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-lean3',3,2)"><span>D</span> Los tres simultáneamente</button>
+          </div>
+          <div class="mq-feedback" id="mq-lean3-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-lean3')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TPM -->
+    <div class="topic-card" id="t-lean6">
+      <div class="topic-header" onclick="toggle('t-lean6')">
+        <span class="topic-icon">⚙️</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">TPM — Mantenimiento Productivo Total</div>
+          <div class="topic-subtitle">Reduce fallas no planificadas · Operarios como primeros mantenedores</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-lean">Manufactura Lean</span>
+        <ul class="key-points">
+          <li><strong>Mantenimiento Autónomo:</strong> operarios limpian, lubrican e inspeccionan diariamente</li>
+          <li><strong>Mantenimiento Preventivo:</strong> cambio de piezas de desgaste antes de que fallen</li>
+          <li><strong>Mantenimiento Predictivo:</strong> análisis de vibración, temperatura, ultrasonido</li>
+          <li><strong>MTBF:</strong> Mean Time Between Failures — predice cuándo fallará un componente</li>
+        </ul>
+        <div class="tip-box">TPM es la herramienta para mejorar la Disponibilidad del OEE. Si la máquina falla frecuentemente → TPM.</div>
+      </div>
+    </div>
+
+  </div><!-- /panel-lean -->
+
+  <!-- ============================== PANEL ERGONOMÍA ============================== -->
+  <div class="panel" id="panel-erg">
+
+    <!-- OCRA -->
+    <div class="topic-card" id="t-erg1">
+      <div class="topic-header" onclick="toggle('t-erg1')">
+        <span class="topic-icon">🖐️</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">Método OCRA — Movimientos Repetitivos</div>
+          <div class="topic-subtitle">Occupational Repetitive Actions · Extremidades superiores</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-erg">Ergonomía</span>
+        <div class="def-box">
+          <strong>¿Cuándo usar OCRA?</strong>
+          Cuando los trabajadores realizan movimientos repetitivos de dedos, muñecas o brazos (ensamble, costura, conexión de terminales eléctricas). Es el método especializado en trastornos musculoesqueléticos de extremidades superiores.
+        </div>
+        <p class="section-title">Los 5 factores que evalúa OCRA</p>
+        <ul class="key-points">
+          <li>Frecuencia de movimientos (>40 acciones/min = riesgo alto)</li>
+          <li>Uso de fuerza (pinzamiento con >1 kg = riesgo)</li>
+          <li>Posturas inadecuadas de brazo, muñeca y mano</li>
+          <li>Ausencia de períodos de recuperación</li>
+          <li>Factores complementarios (vibración, frío, herramientas)</li>
+        </ul>
+        <div class="formula-box">
+          <span class="f-label">Índice OCRA — Semáforo</span>
+          Verde: &lt; 1.5 → Riesgo aceptable<br>
+          Amarillo: 1.5 – 2.2 → Riesgo medio<br>
+          Rojo: &gt; 2.2 → Riesgo alto (acción correctiva urgente)
+        </div>
+        <div class="tip-box">Síndrome del túnel carpiano, tendinitis en brazos → OCRA. No confundir con REBA (posturas generales) ni NIOSH (levantamiento).</div>
+        <div class="mini-quiz" id="mq-erg1">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">80 operarias conectando terminales eléctricas 8h/día. 12 diagnosticadas con túnel carpiano. ¿Qué método ergonómico usar?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-erg1',0,1)"><span>A</span> REBA — evalúa posturas de todo el cuerpo</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-erg1',1,1)"><span>B</span> OCRA — especializado en movimientos repetitivos</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-erg1',2,1)"><span>C</span> NIOSH Lifting Equation — para levantamientos</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-erg1',3,1)"><span>D</span> OWAS — para trabajos de campo</button>
+          </div>
+          <div class="mq-feedback" id="mq-erg1-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-erg1')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NIOSH -->
+    <div class="topic-card" id="t-erg2">
+      <div class="topic-header" onclick="toggle('t-erg2')">
+        <span class="topic-icon">📦</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">Ecuación NIOSH — Levantamiento de Cargas</div>
+          <div class="topic-subtitle">Calcula el Peso Límite Recomendado (RWL) · Previene hernias</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-erg">Ergonomía</span>
+        <div class="formula-box">
+          <span class="f-label">Ecuación NIOSH (revisada 1994)</span>
+          RWL = 23 kg × HM × VM × DM × AM × FM × CM<br><br>
+          HM = factor distancia horizontal<br>
+          VM = factor altura de inicio<br>
+          DM = factor distancia recorrida<br>
+          AM = factor ángulo de asimetría<br>
+          FM = factor frecuencia<br>
+          CM = factor tipo de agarre<br><br>
+          Índice de Levantamiento (IL) = Peso Real ÷ RWL
+        </div>
+        <p class="section-title">Interpretación del IL</p>
+        <ul class="key-points">
+          <li>IL ≤ 1.0 → Tarea segura, riesgo mínimo</li>
+          <li>IL 1.0 – 2.0 → Riesgo moderado, se recomienda rediseño</li>
+          <li>IL > 2.0 → Riesgo alto, rediseño urgente (hernias, lesiones lumbares)</li>
+        </ul>
+        <div class="tip-box">Levantamiento de cargas desde el piso, hernias de disco, dolor lumbar → Ecuación NIOSH. La carga de referencia base es 23 kg en condiciones ideales.</div>
+        <div class="mini-quiz" id="mq-erg2">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">Trabajadores levantan cajas de 25 kg desde el piso hasta 1.5 m, 6 veces/hora. Hay hernias de disco. ¿Qué herramienta usar?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-erg2',0,1)"><span>A</span> RULA — para trabajos sentados con pantallas</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-erg2',1,1)"><span>B</span> Ecuación NIOSH — calcula el RWL e IL</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-erg2',2,1)"><span>C</span> OCRA — para movimientos repetitivos</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-erg2',3,1)"><span>D</span> ISO 45001 define directamente el peso máximo</button>
+          </div>
+          <div class="mq-feedback" id="mq-erg2-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-erg2')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Métodos adicionales -->
+    <div class="topic-card" id="t-erg3">
+      <div class="topic-header" onclick="toggle('t-erg3')">
+        <span class="topic-icon">📋</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">Otros Métodos Ergonómicos Clave</div>
+          <div class="topic-subtitle">REBA · RULA · OWAS — Cuándo usar cada uno</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-erg">Ergonomía</span>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <h4 style="color:#fcd34d">REBA</h4>
+            <ul>
+              <li>Evaluación rápida de todo el cuerpo</li>
+              <li>Posturas generales de pie o en movimiento</li>
+              <li>Industria manufacturera general</li>
+              <li>NO apto para alta frecuencia digital</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#93c5fd">RULA</h4>
+            <ul>
+              <li>Miembro superior + cuello + espalda</li>
+              <li>Trabajo sedentario con pantallas</li>
+              <li>Oficinas y trabajo de precisión</li>
+              <li>Bueno para puestos estáticos</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#6ee7b7">OCRA</h4>
+            <ul>
+              <li>Solo extremidades superiores</li>
+              <li>Movimientos de alta frecuencia</li>
+              <li>Ensamble, costura, terminales</li>
+              <li>Detecta túnel carpiano, tendinitis</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#fca5a5">NIOSH</h4>
+            <ul>
+              <li>Solo levantamiento de cargas</li>
+              <li>Almacenes y logística</li>
+              <li>Calcula RWL e IL</li>
+              <li>Base: 23 kg en condiciones ideales</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-erg -->
+
+  <!-- ============================== PANEL CALIDAD ============================== -->
+  <div class="panel" id="panel-seg">
+
+    <!-- Cpk -->
+    <div class="topic-card" id="t-seg1">
+      <div class="topic-header" onclick="toggle('t-seg1')">
+        <span class="topic-icon">🎯</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">Cpk — Índice de Capacidad del Proceso</div>
+          <div class="topic-subtitle">Mide si el proceso produce dentro de especificación · Estándar: 1.33</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-seg">Calidad & Control</span>
+        <div class="formula-box">
+          <span class="f-label">Interpretación del Cpk</span>
+          Cpk &lt; 1.00 → Proceso INCAPAZ (produce defectos sistemáticamente)<br>
+          Cpk 1.00 – 1.33 → Marginalmente capaz<br>
+          Cpk ≥ 1.33 → Capaz (estándar industrial mínimo)<br>
+          Cpk ≥ 1.67 → Excelente (Six Sigma nivel 5)<br>
+          Cpk = 2.00 → Six Sigma (3.4 ppm de defectos)
+        </div>
+        <p class="section-title">Acción cuando Cpk &lt; 1.33</p>
+        <ul class="key-points">
+          <li><strong>1.</strong> Pausar la producción del lote afectado</li>
+          <li><strong>2.</strong> Hacer estudio Gauge R&R (verificar que el equipo de medición no añade variación)</li>
+          <li><strong>3.</strong> Identificar fuentes de variación con ANOVA o DOE</li>
+          <li><strong>4.</strong> Controlar variables críticas del proceso</li>
+          <li><strong>5.</strong> Reducir la variación (no ampliar las especificaciones)</li>
+        </ul>
+        <div class="alert-box">Ampliar los límites de especificación para que el Cpk suba NO es aceptable. Significa entregar al cliente un producto de menor calidad.</div>
+        <div class="mini-quiz" id="mq-seg1">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">FarmaNova tiene Cpk = 0.72 en cápsulas de vitamina C. El cliente exige Cpk ≥ 1.33. ¿Qué significa y qué hacer?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-seg1',0,1)"><span>A</span> Cpk 0.72 es aceptable para industria farmacéutica</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-seg1',1,1)"><span>B</span> Proceso incapaz — reducir variación hasta Cpk ≥ 1.33</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-seg1',2,1)"><span>C</span> Significa que el 72% de las cápsulas están dentro de spec</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-seg1',3,1)"><span>D</span> Ampliar los límites de especificación a ±20 mg</button>
+          </div>
+          <div class="mq-feedback" id="mq-seg1-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-seg1')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FMEA / AMFE -->
+    <div class="topic-card" id="t-seg2">
+      <div class="topic-header" onclick="toggle('t-seg2')">
+        <span class="topic-icon">🔍</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">AMFE / FMEA — Análisis Modal de Fallos</div>
+          <div class="topic-subtitle">Herramienta PREVENTIVA · Antes de que el producto falle</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-seg">Calidad & Control</span>
+        <div class="def-box">
+          <strong>FMEA vs. Ishikawa</strong>
+          FMEA = PROACTIVO (previene antes de que falle). Ishikawa = REACTIVO (investiga lo que ya falló). Cuando el examen dice "antes del lanzamiento" o "identificar fallas potenciales" → FMEA.
+        </div>
+        <div class="formula-box">
+          <span class="f-label">RPN — Risk Priority Number</span>
+          RPN = Severidad × Ocurrencia × Detección<br>
+          (cada factor en escala 1-10)<br><br>
+          RPN alto → prioridad máxima de acción preventiva
+        </div>
+        <p class="section-title">Pasos del FMEA</p>
+        <ul class="key-points">
+          <li>Para cada función: ¿de qué manera puede fallar? (modo de falla)</li>
+          <li>¿Qué experimenta el cliente si falla? (efecto)</li>
+          <li>¿Por qué podría ocurrir? (causa potencial)</li>
+          <li>Calcular RPN = Severidad × Ocurrencia × Detección</li>
+          <li>Implementar acciones para los RPN más altos</li>
+        </ul>
+        <div class="tip-box">FMEA es obligatorio en industria automotriz (IATF 16949) y médica (ISO 13485). Si el escenario menciona "proactivo" o "antes de fabricar" → FMEA.</div>
+      </div>
+    </div>
+
+    <!-- Diagrama de Pareto -->
+    <div class="topic-card" id="t-seg3">
+      <div class="topic-header" onclick="toggle('t-seg3')">
+        <span class="topic-icon">📊</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">7 Herramientas Básicas de Calidad</div>
+          <div class="topic-subtitle">Pareto · Ishikawa · Histograma · Cartas de Control · Dispersión · Estratificación</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-seg">Calidad & Control</span>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <h4 style="color:#fca5a5">Diagrama de Pareto</h4>
+            <ul>
+              <li>Principio 80/20 de Vilfredo Pareto</li>
+              <li>20% causas → 80% problemas</li>
+              <li>Para priorizar con presupuesto limitado</li>
+              <li>Barras descendentes + línea acumulada</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#93c5fd">Diagrama de Ishikawa</h4>
+            <ul>
+              <li>Causa-Efecto / Espina de pescado</li>
+              <li>Categorías: 6M (Mano obra, Máquina, Material, Método, Medición, Medio)</li>
+              <li>Reactivo: investiga fallas ya ocurridas</li>
+              <li>Base para análisis de causa raíz</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#6ee7b7">Carta de Control</h4>
+            <ul>
+              <li>Monitoreo en tiempo real del proceso</li>
+              <li>X-barra y R para variables continuas</li>
+              <li>Detecta causas especiales vs. comunes</li>
+              <li>Límites de control = ±3 sigma</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#fcd34d">Histograma</h4>
+            <ul>
+              <li>Distribución de frecuencias de datos</li>
+              <li>Visualiza la forma del proceso</li>
+              <li>Ver si hay sesgo, bimodal o normal</li>
+              <li>Complementa el análisis de Cpk</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tip-box">Presupuesto limitado + priorizar causas → Pareto. Investigar causa raíz de una falla → Ishikawa. Monitorear proceso en tiempo real → Carta de Control.</div>
+        <div class="mini-quiz" id="mq-seg2">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">DisMercado tiene múltiples causas de ruptura de cadena de frío y presupuesto limitado. ¿Qué herramienta prioriza el 20% de causas que generan el 80% del problema?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-seg2',0,1)"><span>A</span> Histograma de temperaturas</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-seg2',1,1)"><span>B</span> Diagrama de Pareto (Principio 80/20)</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-seg2',2,1)"><span>C</span> Gráfica de control de temperatura</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-seg2',3,1)"><span>D</span> Diagrama de dispersión</button>
+          </div>
+          <div class="mq-feedback" id="mq-seg2-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-seg2')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-seg -->
+
+  <!-- ============================== PANEL GESTIÓN ============================== -->
+  <div class="panel" id="panel-gest">
+
+    <!-- VPN / TIR -->
+    <div class="topic-card" id="t-gest1">
+      <div class="topic-header" onclick="toggle('t-gest1')">
+        <span class="topic-icon">💰</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">VPN y TIR — Economía de la Ingeniería</div>
+          <div class="topic-subtitle">Valor Presente Neto · Tasa Interna de Retorno · Decisiones de inversión</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-gest">Gestión & Estrategia</span>
+        <div class="formula-box">
+          <span class="f-label">Conceptos clave</span>
+          VPN: trae flujos futuros a valor de hoy usando WACC (costo de capital)<br>
+          VPN &gt; 0 → la inversión CREA valor → proceder<br>
+          VPN &lt; 0 → la inversión DESTRUYE valor → no proceder<br><br>
+          TIR: tasa de descuento que hace VPN = 0<br>
+          Si TIR &gt; WACC → inversión es rentable
+        </div>
+        <p class="section-title">Proceso de evaluación</p>
+        <ul class="key-points">
+          <li>Proyectar ingresos adicionales durante la vida útil (5-10 años)</li>
+          <li>Restar costos operativos adicionales (energía, mano de obra, materiales)</li>
+          <li>Descontar flujos a valor presente y restar inversión inicial</li>
+          <li>Comparar VPN de cada alternativa → la mayor VPN positiva gana</li>
+          <li>La TIR comunica en % → lenguaje que accionistas entienden</li>
+        </ul>
+        <div class="tip-box">Cuando el examen pide comparar dos inversiones de capital (máquinas, plantas, líneas) → VPN y TIR. El Gantt no evalúa rentabilidad, solo planifica tiempos.</div>
+        <div class="mini-quiz" id="mq-gest1">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">BevCorp debe comparar dos opciones: nueva línea $2.5M vs. ampliar existente $800K. ¿Cuál herramienta financiera principal de Economía de Ingeniería usar?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-gest1',0,1)"><span>A</span> Análisis FODA de ambas opciones</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-gest1',1,1)"><span>B</span> VPN y TIR de cada alternativa</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-gest1',2,1)"><span>C</span> Diagrama de Gantt de implementación</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-gest1',3,1)"><span>D</span> Simulación de Monte Carlo</button>
+          </div>
+          <div class="mq-feedback" id="mq-gest1-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-gest1')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balanced Scorecard -->
+    <div class="topic-card" id="t-gest2">
+      <div class="topic-header" onclick="toggle('t-gest2')">
+        <span class="topic-icon">🧭</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">Balanced Scorecard (BSC)</div>
+          <div class="topic-subtitle">Kaplan & Norton · 4 perspectivas · Alineación estratégica</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-gest">Gestión & Estrategia</span>
+        <div class="def-box">
+          <strong>¿Qué es el BSC?</strong>
+          Herramienta desarrollada por Kaplan y Norton (Harvard, 1992) que traduce la estrategia en objetivos medibles en 4 perspectivas balanceadas. Elimina el trabajo en silos alineando todos los departamentos con la estrategia corporativa.
+        </div>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <h4 style="color:#93c5fd">1. Financiera</h4>
+            <ul>
+              <li>¿Cómo nos ven los accionistas?</li>
+              <li>Margen neto, ROI</li>
+              <li>Crecimiento de ingresos</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#6ee7b7">2. Cliente</h4>
+            <ul>
+              <li>¿Cómo nos perciben los clientes?</li>
+              <li>Satisfacción, tiempo entrega</li>
+              <li>Tasa de defectos al cliente</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#fca5a5">3. Procesos Internos</h4>
+            <ul>
+              <li>¿En qué debemos ser excelentes?</li>
+              <li>OEE, tiempo de ciclo</li>
+              <li>Costo por unidad producida</li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h4 style="color:#fcd34d">4. Aprendizaje</h4>
+            <ul>
+              <li>¿Cómo mejoramos y crecemos?</li>
+              <li>Capacitación, innovación</li>
+              <li>Clima laboral, rotación</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tip-box">Cuando los departamentos trabajan en silos y la empresa quiere alinear todos con la estrategia → Balanced Scorecard. Un ERP integra datos, pero no alinea estrategia.</div>
+        <div class="mini-quiz" id="mq-gest2">
+          <div class="mini-quiz-title">⚡ Mini Quiz</div>
+          <div class="mq-question">ManuRD: producción persigue cantidad, calidad persigue cero defectos, logística persigue entregas — en conflicto. ¿Qué herramienta alinea todos con la estrategia?</div>
+          <div class="mq-options">
+            <button class="mq-opt" onclick="mqAnswer('mq-gest2',0,1)"><span>A</span> Diagrama de Gantt anual</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-gest2',1,1)"><span>B</span> Balanced Scorecard (BSC) — 4 perspectivas</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-gest2',2,1)"><span>C</span> Análisis FODA trimestral</button>
+            <button class="mq-opt" onclick="mqAnswer('mq-gest2',3,1)"><span>D</span> Sistema ERP SAP integrado</button>
+          </div>
+          <div class="mq-feedback" id="mq-gest2-fb"></div>
+          <button class="mq-reset" onclick="mqReset('mq-gest2')">↺ Reintentar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ISO 22301 BCP -->
+    <div class="topic-card" id="t-gest3">
+      <div class="topic-header" onclick="toggle('t-gest3')">
+        <span class="topic-icon">🔄</span>
+        <div class="topic-title-wrap">
+          <div class="topic-title">Plan de Continuidad del Negocio (BCP)</div>
+          <div class="topic-subtitle">ISO 22301:2019 · RTO · RPO · Gestión de crisis</div>
+        </div>
+        <span class="topic-arrow">›</span>
+      </div>
+      <div class="topic-body">
+        <span class="cat-tag tag-gest">Gestión & Estrategia</span>
+        <div class="formula-box">
+          <span class="f-label">Conceptos clave</span>
+          RTO (Recovery Time Objective): tiempo máximo tolerable de interrupción<br>
+          RPO (Recovery Point Objective): pérdida máxima de datos tolerable<br><br>
+          Ejemplo: RTO = 4 horas → el sistema debe estar operativo en máximo 4 horas
+        </div>
+        <p class="section-title">Componentes del BCP</p>
+        <ul class="key-points">
+          <li>Procedimientos manuales de respaldo para operar sin sistemas digitales</li>
+          <li>Protocolo de comunicación de la emergencia (árbol de llamadas)</li>
+          <li>Responsables específicos de cada acción de recuperación</li>
+          <li>Pruebas periódicas del plan con simulacros</li>
+        </ul>
+        <div class="alert-box">Confiar solo en el SLA del proveedor no es suficiente — los SLA compensan económicamente pero no recuperan la operación en el tiempo requerido.</div>
+        <div class="tip-box">Cuando el sistema falla y el proceso debe recuperarse en X horas → BCP + ISO 22301. El RTO define el tiempo máximo de recuperación.</div>
+      </div>
+    </div>
+
+  </div><!-- /panel-gest -->
+
+  <!-- ── RESUMEN RÁPIDO ── -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-top:1.5rem">
+    <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin-bottom:1rem">⚡ Cheat Sheet — Mapa mental del examen</p>
+    <div class="cheatsheet-grid">
+      <div class="cheat-card">
+        <h3 style="color:#93c5fd">Exportar a Europa/EE.UU.</h3>
+        <p>Necesitan certificación de calidad para firmar contrato de importación</p>
+        <span class="code">→ ISO 9001:2015</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#6ee7b7">Accidentes laborales</h3>
+        <p>Ministerio de Trabajo emite advertencia, lesiones recurrentes</p>
+        <span class="code">→ ISO 45001:2018</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#fcd34d">Factura eléctrica alta</h3>
+        <p>Compresores o equipos que consumen más de lo necesario</p>
+        <span class="code">→ ISO 50001:2018</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#fca5a5">Alimentos retenidos en aduana</h3>
+        <p>No pueden rastrear el origen del lote exportado</p>
+        <span class="code">→ ISO 22000 + Trazabilidad</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#c4b5fd">Túnel carpiano / tendinitis</h3>
+        <p>Movimientos repetitivos de dedos y muñecas en ensamble</p>
+        <span class="code">→ Método OCRA</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#93c5fd">Hernias, dolor lumbar</h3>
+        <p>Levantar cajas pesadas desde el piso en almacén</p>
+        <span class="code">→ Ecuación NIOSH</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#6ee7b7">Lead time enorme vs. trabajo real mínimo</h3>
+        <p>99% del tiempo el producto espera, no se trabaja</p>
+        <span class="code">→ VSM (Value Stream Map)</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#fcd34d">Takt Time</h3>
+        <p>Diseñar la línea al ritmo del cliente</p>
+        <span class="code">= T. Neto ÷ Demanda</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#fca5a5">Cpk &lt; 1.33</h3>
+        <p>Proceso incapaz, produce demasiados defectos fuera de spec</p>
+        <span class="code">→ Reducir variación</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#c4b5fd">Identificar fallas ANTES de producir</h3>
+        <p>Análisis preventivo de diseño o proceso</p>
+        <span class="code">→ FMEA (RPN = S×O×D)</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#93c5fd">Priorizar causas con presupuesto limitado</h3>
+        <p>El 20% de causas genera el 80% de problemas</p>
+        <span class="code">→ Diagrama de Pareto</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#6ee7b7">Comparar 2 inversiones de capital</h3>
+        <p>¿Cuál alternativa es más rentable a 5 años?</p>
+        <span class="code">→ VPN y TIR</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#fcd34d">OEE 47% — máquina muy ineficiente</h3>
+        <p>Disponibilidad 72%, Rendimiento 81%, Calidad 80%</p>
+        <span class="code">→ Atacar Disponibilidad c/TPM</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#fca5a5">Alinear departamentos con estrategia</h3>
+        <p>Producción, calidad y logística trabajan en silos</p>
+        <span class="code">→ Balanced Scorecard (BSC)</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#c4b5fd">Sistema falla, recuperar en X horas</h3>
+        <p>WMS caído, RTO definido por el negocio</p>
+        <span class="code">→ BCP + ISO 22301</span>
+      </div>
+      <div class="cheat-card">
+        <h3 style="color:#93c5fd">Tiempos de cambio de referencia largos</h3>
+        <p>4 horas de setup entre productos distintos</p>
+        <span class="code">→ SMED (&lt; 10 min)</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+function switchTab(cat){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-cat="${cat}"]`).classList.add('active');
+  document.getElementById(`panel-${cat}`).classList.add('active');
+}
+
+function toggle(id){
+  const card=document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+const MQ_EXPLANATIONS={
+  'mq-iso1':{correct:1,ok:'✓ Correcto. ISO 9001:2015 es el estándar de calidad más reconocido mundialmente. Es el primer paso para demostrar gestión de calidad a clientes europeos.',err:'✗ Incorrecto. Para demostrar gestión de calidad y exportar a Europa → ISO 9001:2015. ISO 14001 es ambiental, ISO 45001 es seguridad laboral.'},
+  'mq-lean1':{correct:1,ok:'✓ Correcto. El VSM mapea visualmente todo el flujo desde materias primas hasta el cliente, revelando dónde están todos los tiempos de espera y desperdicios.',err:'✗ Incorrecto. El VSM (Value Stream Map) es la herramienta que hace visible el flujo completo del proceso y dónde se pierde el tiempo.'},
+  'mq-lean2':{correct:1,ok:'✓ Correcto. Tiempo neto = 480 − 20 − 10 = 450 min. Takt Time = 450 ÷ 960 = 0.469 min = 28.1 segundos/pieza.',err:'✗ Incorrecto. Hay que restar los descansos y reuniones: Tiempo neto = 480 − 20 − 10 = 450 min. TT = 450 ÷ 960 = 28.1 seg.'},
+  'mq-lean3':{correct:2,ok:'✓ Correcto. Disponibilidad (72%) tiene la mayor brecha respecto al objetivo de 90%. Atacarla primero con TPM da el mayor impacto en el OEE global.',err:'✗ Incorrecto. Disponibilidad (72%) tiene la mayor brecha al objetivo (90%). Atacar ahí con TPM tiene el mayor impacto en el OEE.'},
+  'mq-erg1':{correct:1,ok:'✓ Correcto. OCRA fue desarrollado específicamente para evaluar riesgo por movimientos repetitivos en extremidades superiores — exactamente lo que se necesita aquí.',err:'✗ Incorrecto. Para movimientos repetitivos de dedos/muñecas y trastornos como túnel carpiano → Método OCRA. REBA es para posturas generales de todo el cuerpo.'},
+  'mq-erg2':{correct:1,ok:'✓ Correcto. La Ecuación NIOSH calcula el RWL e IL para tareas de levantamiento, determinando si el peso es seguro en esas condiciones específicas.',err:'✗ Incorrecto. Para levantamiento de cargas y hernias de disco → Ecuación NIOSH (calcula RWL e IL). OCRA es para movimientos repetitivos.'},
+  'mq-seg1':{correct:1,ok:'✓ Correcto. Cpk = 0.72 indica proceso INCAPAZ (mínimo aceptable 1.33). La solución es reducir la variación del proceso, no ampliar especificaciones.',err:'✗ Incorrecto. Cpk 0.72 significa proceso incapaz. El plan correcto es reducir variación para lograr Cpk ≥ 1.33, no ampliar especificaciones.'},
+  'mq-seg2':{correct:1,ok:'✓ Correcto. El Diagrama de Pareto aplica el principio 80/20 para priorizar las causas que generan más impacto, ideal cuando hay presupuesto limitado.',err:'✗ Incorrecto. Para priorizar con presupuesto limitado usando el principio 80/20 → Diagrama de Pareto.'},
+  'mq-gest1':{correct:1,ok:'✓ Correcto. VPN y TIR son las herramientas estándar de Economía de la Ingeniería para evaluar y comparar inversiones de capital.',err:'✗ Incorrecto. Para comparar rentabilidad de inversiones de capital → VPN (Valor Presente Neto) y TIR (Tasa Interna de Retorno).'},
+  'mq-gest2':{correct:1,ok:'✓ Correcto. El Balanced Scorecard (BSC) de Kaplan y Norton traduce la estrategia en métricas de 4 perspectivas, alineando todos los departamentos.',err:'✗ Incorrecto. Para alinear departamentos con la estrategia corporativa → Balanced Scorecard (BSC). Un ERP integra datos pero no alinea estrategia.'},
+};
+
+function mqAnswer(mqId,selected,correct){
+  const container=document.getElementById(mqId);
+  const opts=container.querySelectorAll('.mq-opt');
+  opts.forEach(o=>o.disabled=true);
+  const isOk=selected===correct;
+  opts[selected].classList.add(isOk?'correct':'wrong');
+  if(!isOk) opts[correct].classList.add('show-ans');
+  const fb=document.getElementById(`${mqId}-fb`);
+  const exp=MQ_EXPLANATIONS[mqId];
+  fb.className=`mq-feedback ${isOk?'ok':'err'}`;
+  fb.textContent=isOk?exp.ok:exp.err;
+}
+
+function mqReset(mqId){
+  const container=document.getElementById(mqId);
+  const opts=container.querySelectorAll('.mq-opt');
+  opts.forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong','show-ans')});
+  const fb=document.getElementById(`${mqId}-fb`);
+  fb.className='mq-feedback';
+  fb.textContent='';
+}
+</script>
+</body>
+</html>
