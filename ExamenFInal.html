@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Ingeniería Industrial | O&M</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --blue:#1a3a5c;--blue2:#2563a8;--blue3:#3b82f6;--blue4:#93c5fd;
+    --green:#0f5132;--green2:#198754;--green3:#20c997;--green4:#a3e6cd;
+    --amber:#92400e;--amber2:#d97706;--amber3:#fbbf24;--amber4:#fde68a;
+    --red:#7f1d1d;--red2:#dc2626;--red3:#f87171;--red4:#fee2e2;
+    --bg:#0f172a;--bg2:#1e293b;--bg3:#334155;--bg4:#475569;
+    --text:#f1f5f9;--text2:#cbd5e1;--text3:#94a3b8;
+    --card:#1e293b;--card2:#263248;--border:#334155;
+  }
+  body{
+    background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+    min-height:100vh;line-height:1.6;
+  }
+
+  /* ── HERO ── */
+  .hero{
+    background:linear-gradient(135deg,#0f172a 0%,#1a3a5c 50%,#0f2a1a 100%);
+    border-bottom:1px solid var(--border);
+    padding:2.5rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563a8' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-icon{font-size:3rem;margin-bottom:0.75rem;display:block}
+  .hero h1{font-size:1.75rem;font-weight:700;color:#fff;margin-bottom:0.35rem;letter-spacing:-0.02em}
+  .hero p{font-size:0.95rem;color:var(--text3);max-width:520px;margin:0 auto 1rem}
+  .hero-badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .badge{
+    font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:20px;
+    letter-spacing:0.04em;text-transform:uppercase;
+  }
+  .badge-blue{background:#1e3a5f;color:#93c5fd;border:1px solid #2563a8}
+  .badge-green{background:#0a2e1f;color:#6ee7b7;border:1px solid #198754}
+  .badge-amber{background:#2d1f06;color:#fcd34d;border:1px solid #d97706}
+
+  /* ── MAIN LAYOUT ── */
+  .main{max-width:760px;margin:0 auto;padding:1.5rem 1rem 3rem}
+
+  /* ── PROGRESS ── */
+  .progress-wrap{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem;
+  }
+  .progress-track{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--blue2),var(--green2));border-radius:4px;transition:width 0.4s}
+  .progress-meta{display:flex;justify-content:space-between;align-items:center;width:100%;gap:0.5rem}
+  .progress-text{font-size:0.8rem;color:var(--text3);white-space:nowrap}
+  .score-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+  .pill{font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:0.02em}
+  .pill-ok{background:#052e16;color:#6ee7b7;border:1px solid #198754}
+  .pill-err{background:#450a0a;color:#fca5a5;border:1px solid #dc2626}
+  .pill-cat{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+
+  /* ── QUESTION CARD ── */
+  .qcard{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;
+    padding:1.5rem;margin-bottom:1rem;
+  }
+  .cat-tag{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:0.7rem;font-weight:700;padding:4px 12px;border-radius:20px;
+    letter-spacing:0.04em;text-transform:uppercase;margin-bottom:1rem;
+  }
+  .tag-iso{background:#0c1e35;color:#93c5fd;border:1px solid #2563a8}
+  .tag-lean{background:#052e16;color:#6ee7b7;border:1px solid #198754}
+  .tag-erg{background:#2d1f06;color:#fcd34d;border:1px solid #d97706}
+  .tag-seg{background:#1f0a0a;color:#fca5a5;border:1px solid #dc2626}
+  .tag-gest{background:#1a0a2e;color:#c4b5fd;border:1px solid #7c3aed}
+
+  .scenario-box{
+    background:var(--bg);border-left:3px solid var(--blue2);
+    border-radius:0 8px 8px 0;padding:0.85rem 1rem;margin-bottom:1.1rem;
+    font-size:0.88rem;color:var(--text2);line-height:1.65;
+  }
+  .scenario-box strong{color:var(--blue4);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:4px}
+  .question{font-size:1rem;font-weight:600;color:var(--text);line-height:1.55;margin-bottom:1.1rem}
+
+  /* ── OPTIONS ── */
+  .options{display:flex;flex-direction:column;gap:8px}
+  .opt{
+    background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+    padding:0.75rem 1rem;font-size:0.88rem;color:var(--text2);
+    cursor:pointer;text-align:left;transition:all 0.15s;line-height:1.5;
+    display:flex;align-items:flex-start;gap:10px;
+  }
+  .opt:hover:not(:disabled){background:var(--bg3);border-color:var(--blue3);color:var(--text)}
+  .opt-letter{
+    width:24px;height:24px;border-radius:50%;background:var(--bg3);
+    color:var(--text3);font-size:0.72rem;font-weight:700;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;margin-top:1px;
+  }
+  .opt.correct{background:#052e16;border-color:#198754;color:#a7f3d0}
+  .opt.correct .opt-letter{background:#198754;color:#fff}
+  .opt.wrong{background:#450a0a;border-color:#dc2626;color:#fecaca}
+  .opt.wrong .opt-letter{background:#dc2626;color:#fff}
+  .opt.show-answer{background:#052e16;border-color:#198754;color:#a7f3d0}
+  .opt.show-answer .opt-letter{background:#198754;color:#fff}
+  .opt:disabled{cursor:default}
+
+  /* ── EXPLANATION ── */
+  .explanation{
+    border-radius:10px;padding:1.1rem;margin-top:1rem;
+    font-size:0.87rem;line-height:1.7;
+  }
+  .explanation.ok{background:#052e16;border:1px solid #198754;color:#d1fae5}
+  .explanation.err{background:#1f0505;border:1px solid #991b1b;color:#fee2e2}
+  .explanation strong{display:block;font-size:0.95rem;margin-bottom:0.6rem}
+  .next-btn{
+    margin-top:1rem;background:var(--blue2);border:none;border-radius:10px;
+    padding:0.65rem 1.4rem;font-size:0.88rem;font-weight:600;
+    color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;
+    transition:background 0.15s;
+  }
+  .next-btn:hover{background:#1d4ed8}
+
+  /* ── FINAL SCREEN ── */
+  .final{text-align:center;padding:1.5rem 1rem}
+  .score-ring{
+    width:140px;height:140px;border-radius:50%;margin:0 auto 1.5rem;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border:4px solid var(--green2);background:var(--card);position:relative;
+  }
+  .score-pct{font-size:2.2rem;font-weight:700}
+  .score-lbl{font-size:0.75rem;color:var(--text3);margin-top:2px}
+  .final h2{font-size:1.25rem;font-weight:700;margin-bottom:0.4rem}
+  .final p{font-size:0.9rem;color:var(--text3);margin-bottom:1.5rem;line-height:1.6}
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+  .stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem}
+  .stat-val{font-size:1.6rem;font-weight:700}
+  .stat-name{font-size:0.72rem;color:var(--text3);margin-top:2px}
+  .cat-results{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.1rem;text-align:left;margin-bottom:1.5rem}
+  .cat-results h3{font-size:0.8rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.9rem}
+  .cat-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .cat-name{font-size:0.78rem;color:var(--text2);width:120px;flex-shrink:0}
+  .bar-bg{flex:1;height:7px;background:var(--bg3);border-radius:4px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:4px;transition:width 0.7s}
+  .cat-score{font-size:0.78rem;font-weight:600;width:36px;text-align:right;color:var(--text3)}
+  .retry-btn{
+    background:transparent;border:1px solid var(--blue2);color:var(--blue4);
+    border-radius:10px;padding:0.7rem 1.75rem;font-size:0.9rem;font-weight:600;
+    cursor:pointer;transition:all 0.15s;
+  }
+  .retry-btn:hover{background:var(--blue2);color:#fff}
+
+  /* ── DECORATIVE SIDEBAR ICONS (desktop) ── */
+  @media(min-width:900px){
+    .main{padding:1.5rem 2rem 3rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-icon">⚙️</span>
+  <h1>Quiz — Ingeniería Industrial</h1>
+  <p>Escenarios empresariales reales · Normas ISO · Lean Manufacturing · Ergonomía · Calidad · Gestión Estratégica</p>
+  <div class="hero-badges">
+    <span class="badge badge-blue">20 Preguntas</span>
+    <span class="badge badge-green">5 Categorías</span>
+    <span class="badge badge-amber">Escenarios Reales RD</span>
+    <span class="badge badge-blue">Formato APA</span>
+    <span class="badge badge-green">Explicaciones Detalladas</span>
+  </div>
+</div>
+
+<div class="main" id="main"></div>
+
+<script>
+const ALL_Q=[
+{id:1,v:0,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"SERDOME, empresa dominicana de manufactura de calzado, quiere exportar a Europa. Sus clientes europeos le exigen evidencia de que sus procesos productivos son consistentes y garantizan calidad. La empresa nunca ha implementado ningún sistema de gestión formal.",
+question:"¿Qué norma ISO debe implementar SERDOME como primer paso para demostrar gestión de calidad y acceder al mercado europeo?",
+options:["ISO 14001:2015 – Sistema de Gestión Ambiental","ISO 9001:2015 – Sistema de Gestión de la Calidad","ISO 45001:2018 – Seguridad y Salud en el Trabajo","ISO 27001:2022 – Seguridad de la Información"],
+correct:1,
+explanation:"<strong>✓ ISO 9001:2015 es el estándar de calidad más implementado del mundo</strong> (más de 1 millón de empresas certificadas en 170 países). Establece los requisitos para garantizar que los productos y servicios cumplan consistentemente con las expectativas del cliente. Para SERDOME, implementarlo implica: mapear todos los procesos productivos (corte, aparado, terminado), definir criterios de aceptación para cada operación, gestionar no conformidades con acciones correctivas, y pasar una auditoría de certificación por organismos como Bureau Veritas o TÜV Rheinland. Sin ISO 9001, los importadores europeos no firman contrato."},
+
+{id:2,v:0,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"La planta textil CONFEX en Santiago tiene un problema grave: lleva 3 meses con accidentes laborales recurrentes — operarias que se cortan con agujas, caídas por pisos mojados y problemas de espalda por posturas incorrectas. El Ministerio de Trabajo emitió una advertencia formal.",
+question:"¿Qué norma ISO debe implementar CONFEX para gestionar sistemáticamente los riesgos laborales y cumplir con la legislación dominicana?",
+options:["ISO 9001:2015 para mejorar los procesos de producción","ISO 45001:2018 – Sistema de Gestión de Seguridad y Salud en el Trabajo","ISO 14001:2015 para gestionar los residuos de tela","El Reglamento 522-06 dominicano es suficiente sin ninguna ISO"],
+correct:1,
+explanation:"<strong>✓ ISO 45001:2018 es el estándar internacional para Seguridad y Salud en el Trabajo (SST).</strong> Requiere: (1) Identificar peligros en cada puesto (agujas sin protector, pisos resbaladizos, posturas forzadas). (2) Evaluar el riesgo de cada peligro con matrices de probabilidad × impacto. (3) Implementar controles preventivos: guardas en máquinas, antideslizantes, análisis ergonómico. (4) Investigar cada incidente para encontrar la causa raíz. (5) Medir resultados con KPIs como Índice de Frecuencia de Accidentes (IFA). El Reglamento 522-06 dominicano establece los requisitos legales mínimos, pero ISO 45001 provee el sistema de gestión para cumplirlos sistemáticamente."},
+
+{id:3,v:0,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"AgroFresco, empresa dominicana que exporta aguacates y mangos a Alemania, recibió una alerta de su cliente: un contenedor fue retenido en aduanas porque no pudieron rastrear el origen del lote. El cliente necesita saber en qué finca se cosechó, cuándo y bajo qué condiciones.",
+question:"¿Qué sistema de normas debe implementar AgroFresco para garantizar la trazabilidad completa de sus productos agroalimentarios?",
+options:["ISO 9001:2015 – solo necesitan mejorar su documentación","ISO 22000:2018 – Sistema de Gestión de Inocuidad Alimentaria con trazabilidad","ISO 14001:2015 – gestión del impacto ambiental del cultivo","ISO 50001:2018 – eficiencia energética en las plantas de empaque"],
+correct:1,
+explanation:"<strong>✓ ISO 22000:2018 combinada con FSSC 22000</strong> es el estándar global para inocuidad alimentaria con trazabilidad completa. Requiere implementar el sistema HACCP (Hazard Analysis and Critical Control Points) para identificar los puntos críticos de la cadena de frío, y un sistema de codificación de lotes. En la práctica, AgroFresco asignaría un código QR a cada caja vinculado a una base de datos que registra: finca de origen, fecha de cosecha, trabajadores involucrados, temperatura en empaque y condiciones de transporte. Así, si hay un problema de inocuidad, se puede retirar del mercado exactamente el lote afectado en menos de 4 horas, sin retirar toda la producción."},
+
+{id:4,v:0,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"TechParts RD, que fabrica componentes plásticos para autos, recibe una queja formal de su cliente en México: 3,200 piezas defectuosas en el último mes. El cliente amenaza con cambiar de proveedor si no recibe acciones correctivas documentadas en 15 días.",
+question:"Dentro del sistema ISO 9001, ¿cuál es el proceso correcto que debe seguir TechParts RD para atender esta no conformidad?",
+options:["Reemplazar las piezas defectuosas y enviar una disculpa por correo","Activar el proceso de No Conformidad: contener → causa raíz (8D/Ishikawa) → acción correctiva → verificar eficacia → documentar","Despedir al operario responsable de la línea defectuosa","Reducir el precio del próximo pedido como compensación"],
+correct:1,
+explanation:"<strong>✓ ISO 9001:2015 Cláusula 10.2 establece el proceso de No Conformidad y Acción Correctiva.</strong> Los pasos son: (1) Contención inmediata: separar y cuarentenar las 3,200 piezas. (2) Notificación formal al cliente con plan de acción. (3) Análisis de causa raíz usando metodología 8D (8 Disciplinas) — no el síntoma sino la causa real (¿cambió la temperatura del molde? ¿nuevo lote de resina? ¿operario sin capacitación?). (4) Implementar la acción correctiva que elimina la causa raíz. (5) Verificar eficacia: producir un lote piloto y confirmar que el defecto desapareció. (6) Documentar todo. El error más común: quedarse en la contención sin llegar a la causa raíz, por lo que el problema se repite."},
+
+{id:5,v:0,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"EnergiaSur, planta de bebidas en Santo Domingo, paga RD$4 millones mensuales en electricidad. La gerencia sospecha que los compresores de refrigeración que trabajan 24/7 consumen más energía de lo necesario. Quieren optimizar el consumo de manera sostenida.",
+question:"¿Qué norma ISO proporciona el marco para implementar un sistema de gestión energética que reduzca el consumo de forma sistemática?",
+options:["ISO 14001:2015 – Gestión Ambiental (incluye eficiencia energética)","ISO 50001:2018 – Sistema de Gestión de la Energía","ISO 9001:2015 – Calidad (puede incluir indicadores de energía)","No existe norma ISO específica para energía; es solo ingeniería eléctrica"],
+correct:1,
+explanation:"<strong>✓ ISO 50001:2018 establece el Sistema de Gestión de la Energía (SGEn).</strong> Su ciclo de mejora incluye: (1) Revisar el uso energético actual con medidores en cada equipo. (2) Identificar los Usos Significativos de Energía (USE) — en EnergiaSur serían los compresores de refrigeración. (3) Establecer líneas base de consumo y metas de reducción medibles. (4) Implementar planes de acción: mantenimiento de compresores, variadores de frecuencia VFD, aislamiento térmico de cámaras. (5) Medir y reportar mensualmente con indicadores de intensidad energética. Empresas que implementan ISO 50001 reportan reducciones del 10-30%. Con RD$4M mensuales, ahorrar un 15% = RD$7.2 millones anuales — un ROI muy atractivo."},
+
+{id:6,v:0,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"MediDevice RD fabrica jeringas desechables para exportación a EE.UU. La FDA emitió una advertencia: sus registros de producción no son trazables y no pueden demostrar que cada lote cumple las especificaciones de esterilidad. La FDA puede prohibir sus exportaciones.",
+question:"¿Qué práctica fundamental de documentación exige la norma ISO 13485 (dispositivos médicos) para garantizar la trazabilidad de cada lote?",
+options:["Llevar un cuaderno manual con las fechas de producción","Implementar el Device History Record (DHR) — Registro del Historial del Dispositivo con trazabilidad completa de cada lote","Certificarse en ISO 9001:2015 como sustituto de los requisitos FDA","Contratar un representante legal en Estados Unidos"],
+correct:1,
+explanation:"<strong>✓ ISO 13485:2016 requiere el Device History Record (DHR)</strong> para cada lote de dispositivos médicos. El DHR debe incluir: cantidad fabricada y liberada al mercado, fecha de manufactura, resultados de CADA prueba de calidad (esterilidad, hermeticidad, dimensiones críticas), identificación del equipo utilizado, nombre del operario que realizó las pruebas, y número de lote de los materiales de entrada. Este registro debe conservarse mínimo 2 años después del vencimiento del producto. Sin DHR completo y trazable, la FDA emite una Warning Letter y puede suspender las exportaciones. Para MediDevice RD, esto significa pasar de cuadernos manuales a un sistema digital de trazabilidad con código de lote único para cada unidad."},
+
+{id:7,v:0,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"Una constructora dominicana ganó un contrato para un edificio de 12 pisos en el Distrito Nacional. El cliente, un banco internacional, exige que la empresa demuestre que gestiona sus impactos ambientales: ruido, polvo, manejo de escombros y aguas de escorrentía.",
+question:"¿Qué norma ISO debe implementar la constructora para gestionar sus impactos ambientales y satisfacer al cliente bancario?",
+options:["ISO 9001:2015 – Sistema de Gestión de la Calidad","ISO 45001:2018 – Seguridad y Salud en el Trabajo","ISO 14001:2015 – Sistema de Gestión Ambiental","ISO 31000:2018 – Gestión del Riesgo"],
+correct:2,
+explanation:"<strong>✓ ISO 14001:2015 es el estándar para Sistemas de Gestión Ambiental (SGA).</strong> Requiere: (1) Identificar los aspectos ambientales significativos de la construcción: ruido de maquinaria pesada, polvo de demolición, escombros, agua de lluvia contaminada con cemento. (2) Evaluar su impacto ambiental potencial. (3) Establecer controles operacionales: barreras de polvo, horarios restringidos para actividades ruidosas, contenedores segregados para escombros clasificados (concreto, metal, madera). (4) Medir el desempeño con indicadores de generación de residuos y quejas de vecinos. Además, la constructora debe obtener la Autorización Ambiental del Ministerio de Medio Ambiente según la Ley 64-00, y ISO 14001 estructura todo ese cumplimiento en un sistema auditable que satisface al banco internacional."},
+
+{id:8,v:0,cat:"lean",cl:"tag-lean",catLabel:"Manufactura Lean",
+scenario:"FurniCraft, fábrica de muebles en Santiago con 45 operarios, tiene un problema: los clientes se quejan de demoras. El gerente nota piezas apiladas esperando la siguiente operación y operarios parados esperando materiales. El tiempo de entrega real es 18 días pero el trabajo real en la pieza es solo 4 horas.",
+question:"¿Cuál es la primera herramienta Lean que debe usar el ingeniero de FurniCraft para visualizar dónde están los desperdicios y diseñar el proceso futuro ideal?",
+options:["Implementar un ERP de inmediato para automatizar la producción","Elaborar un Value Stream Map (VSM) del proceso actual para identificar los desperdicios y diseñar el estado futuro","Contratar más operarios para reducir los tiempos de espera","Aplicar 5S en el área de producción como primer paso"],
+correct:1,
+explanation:"<strong>✓ El Value Stream Mapping (VSM) es la herramienta fundamental del Lean Manufacturing.</strong> Visualiza el flujo completo de materiales e información desde la materia prima hasta el cliente. En el VSM de FurniCraft se dibujan todas las estaciones de trabajo, los inventarios en proceso (triángulos de kaizen), los tiempos de ciclo de cada operación y los tiempos de espera entre estaciones. Al ver el VSM actual, el equipo identificaría que de 18 días, 17 días y 20 horas son espera pura — desperdicio de inventario y espera. El VSM del estado futuro muestra cómo debería fluir idealmente: celdas de manufactura, sistema pull tipo kanban, reducción de inventarios. Esta visión guía todas las demás mejoras. La 5S es importante pero sin el VSM no se sabe qué mejorar primero ni en qué secuencia."},
+
+{id:9,v:0,cat:"lean",cl:"tag-lean",catLabel:"Manufactura Lean",
+scenario:"AutoPiezas del Caribe produce maniguetas plásticas. Su cliente Toyota en México necesita recibir 1,200 unidades diarias. La planta trabaja 8 horas por turno con 30 minutos de almuerzo.",
+question:"¿Cuál es el Takt Time de producción que debe alcanzar AutoPiezas para satisfacer exactamente la demanda de Toyota?",
+options:["Takt Time = 8 horas ÷ 1,200 = 0.4 min/unidad","Takt Time = 450 min disponibles ÷ 1,200 unidades = 0.375 min/unidad = 22.5 segundos/unidad","Takt Time = 30 minutos (el intervalo de descanso)","Takt Time no aplica para producción de plásticos, solo para ensamble manual"],
+correct:1,
+explanation:"<strong>✓ Takt Time = Tiempo disponible neto ÷ Demanda del cliente.</strong> Tiempo disponible = (8h × 60 min) − 30 min almuerzo = 450 minutos netos. Takt Time = 450 min ÷ 1,200 unidades = 0.375 min/unidad = 22.5 segundos/unidad. Esto significa que AutoPiezas debe completar una manigueta cada 22.5 segundos para no generar ni sobreproducción ni desabasto. Si alguna estación tiene un tiempo de ciclo mayor a 22.5 segundos, esa estación es el cuello de botella que define la capacidad máxima de toda la planta. Toda la organización de la línea (número de operarios, velocidad de máquinas, tamaño de lotes) debe ajustarse alrededor del Takt Time, que es el 'latido del corazón' del sistema de producción."},
+
+{id:10,v:0,cat:"lean",cl:"tag-lean",catLabel:"Manufactura Lean",
+scenario:"Una empresa de circuitos electrónicos en zona franca tiene máquinas que tardan 4 horas en cambiar de referencia (setup). Esto obliga a producir lotes enormes para amortizar ese tiempo, generando inventarios excesivos y poca flexibilidad ante los pedidos urgentes del cliente.",
+question:"¿Qué metodología Lean está diseñada específicamente para reducir los tiempos de cambio de referencia (setup) en maquinaria industrial?",
+options:["TPM – Mantenimiento Productivo Total (para reducir fallas de máquinas)","5S – Organización del área de trabajo","SMED – Single Minute Exchange of Die (Cambio en menos de 10 minutos)","Poka-Yoke – Sistema a prueba de errores"],
+correct:2,
+explanation:"<strong>✓ SMED (Single Minute Exchange of Die)</strong> fue desarrollado por Shigeo Shingo en Toyota para reducir los tiempos de cambio a menos de 10 minutos (un solo dígito de minutos). Su metodología tiene 3 pasos: (1) Separar actividades INTERNAS (solo posibles con máquina parada) de EXTERNAS (preparables con máquina corriendo). (2) Convertir internas en externas: precalentar moldes fuera de la máquina mientras esta aún produce el lote anterior. (3) Simplificar y estandarizar con aditamentos de ajuste rápido, conexiones rápidas y plantillas. Empresas que aplican SMED reportan reducciones del 75-90% en tiempo de setup. Reducir de 4 horas a 20 minutos permite producir lotes 12 veces más pequeños con la misma eficiencia, eliminando el inventario forzado."},
+
+{id:11,v:0,cat:"lean",cl:"tag-lean",catLabel:"Manufactura Lean",
+scenario:"PlastiDom tiene un OEE del 47% en su máquina inyectora principal. El análisis muestra: Disponibilidad 72% (fallas frecuentes), Rendimiento 81% (velocidad reducida por desgaste), Calidad 80% (defectos por ajustes incorrectos). La meta del sector es 85% de OEE.",
+question:"¿En cuál de los tres componentes del OEE debe enfocarse PlastiDom primero para maximizar el impacto en el indicador global?",
+options:["Rendimiento (81%) — subir la velocidad de la máquina al 100%","Calidad (80%) — reducir defectos con mejor control de parámetros","Disponibilidad (72%) — implementar TPM para reducir las fallas no planificadas","Los tres tienen igual impacto; hay que atacarlos simultáneamente"],
+correct:2,
+explanation:"<strong>✓ La Disponibilidad (72%) tiene la mayor brecha respecto al 90% objetivo</strong> y es el primer factor a atacar. Para OEE del 85% se necesita aproximadamente: Disponibilidad ≥90%, Rendimiento ≥95%, Calidad ≥99.5%. La herramienta es TPM (Total Productive Maintenance): (1) Mantenimiento Autónomo: operarios limpian, lubriican e inspeccionan diariamente. (2) Mantenimiento Preventivo planificado: cambio de piezas de desgaste antes de que fallen (rodamientos, sellos, correas). (3) Análisis de fallas con MTBF (Mean Time Between Failures) para predecir cuándo fallará cada componente. Subir Disponibilidad de 72% a 90% mientras el resto permanece igual llevaría el OEE de 47% a 58.3% — una ganancia de más de 11 puntos sin invertir en nueva maquinaria."},
+
+{id:12,v:0,cat:"erg",cl:"tag-erg",catLabel:"Ergonomía & Seguridad",
+scenario:"Una planta de ensamblaje de arneses eléctricos en zona franca tiene 80 operarias que trabajan 8 horas diarias realizando movimientos repetitivos de pinzamiento con los dedos (conectar terminales eléctricas). En 6 meses, 12 operarias fueron diagnosticadas con síndrome del túnel carpiano.",
+question:"¿Qué metodología ergonómica es la más apropiada para cuantificar el riesgo de trastornos musculoesqueléticos en extremidades superiores en este puesto?",
+options:["REBA (Rapid Entire Body Assessment) — evalúa posturas de todo el cuerpo","OCRA (Occupational Repetitive Actions) — especializado en movimientos repetitivos de extremidades superiores","NIOSH Lifting Equation — diseñada para tareas de levantamiento de cargas","Método OWAS — para evaluar posturas en trabajos de campo y forestales"],
+correct:1,
+explanation:"<strong>✓ El método OCRA (Checklist OCRA / Índice OCRA)</strong> fue desarrollado específicamente para evaluar el riesgo de trastornos musculoesqueléticos por trabajos repetitivos en extremidades superiores. Evalúa 5 factores: (1) Frecuencia de movimientos (si supera 40 acciones/min en las manos = riesgo alto). (2) Uso de fuerza (pinzamiento con más de 1 kg de fuerza). (3) Posturas inadecuadas de brazo, muñeca y mano. (4) Ausencia de períodos de recuperación. (5) Factores complementarios (vibración, frío). El resultado es un índice numérico: verde (<1.5), amarillo (1.5-2.2), rojo (>2.2 = alto riesgo). REBA es excelente para posturas generales pero no está calibrado para la alta frecuencia de movimientos de dedos y muñecas características del ensamblaje de arneses."},
+
+{id:13,v:0,cat:"erg",cl:"tag-erg",catLabel:"Ergonomía & Seguridad",
+scenario:"En un almacén de distribución en Santo Domingo, los trabajadores levantan cajas de 25 kg desde el piso hasta estanterías a 1.5 metros de altura, 6 veces por hora durante 8 horas. Ya hubo una hernia de disco y varios reportes de dolor lumbar.",
+question:"¿Qué herramienta debe usar el ingeniero industrial para calcular si esta tarea representa un riesgo inaceptable y cuánto peso es realmente seguro levantar en esas condiciones?",
+options:["Método RULA — diseñado para trabajos sentados con pantallas de computadora","Ecuación de Levantamiento NIOSH — calcula el Peso Límite Recomendado (RWL) y el Índice de Levantamiento (IL)","Método OCRA — para movimientos repetitivos de extremidades superiores","ISO 45001 — define directamente el peso máximo permitido en 23 kg para cualquier tarea"],
+correct:1,
+explanation:"<strong>✓ La Ecuación de Levantamiento NIOSH (revisada 1994)</strong> calcula el Peso Límite Recomendado (RWL) usando 6 factores: HM (distancia horizontal del objeto al cuerpo), VM (altura de inicio de la carga), DM (distancia vertical recorrida), AM (ángulo de asimetría del tronco), FM (frecuencia de levantamientos/minuto) y CM (tipo de agarre). RWL = 23 kg × HM × VM × DM × AM × FM × CM. El Índice de Levantamiento (IL) = Peso real ÷ RWL. Si IL > 1: riesgo significativo. En este caso, levantando 25 kg desde el piso hasta 1.5 m con frecuencia de 6/hora, el RWL calculado probablemente sería 8-12 kg, dando IL > 2 — riesgo alto. Las soluciones incluyen: mesa elevadora hidráulica, reducir el peso de las cajas a 15 kg, rotación de tareas cada 90 minutos, o rediseño del layout del almacén."},
+
+{id:14,v:0,cat:"seg",cl:"tag-seg",catLabel:"Calidad & Control",
+scenario:"LabFarma RD, laboratorio farmacéutico, produce tabletas analgésicas. Su línea lleva 2 semanas con tasa de defectos del 8% (tabletas con peso fuera de especificación: 500 mg ± 10 mg). El Cpk calculado del proceso es 0.65.",
+question:"¿Qué indica el valor Cpk = 0.65 y qué acción inmediata debe tomar el equipo de calidad?",
+options:["Cpk 0.65 es excelente — el proceso está bien dentro de los límites de especificación","Cpk 0.65 indica proceso INCAPAZ (mínimo aceptable es 1.33) — produce defectos sistemáticamente; hay que detener, investigar la causa raíz y corregir antes de continuar","Cpk 0.65 significa que el proceso necesita más operarios para mejorar","Cpk aplica solo para manufactura metálica, no para farmacéuticos"],
+correct:1,
+explanation:"<strong>✓ Cpk mide la capacidad real del proceso.</strong> Interpretación: Cpk < 1.00 = incapaz (defectos sistemáticos). Cpk 1.00–1.33 = marginalmente capaz. Cpk ≥ 1.33 = capaz (estándar industrial mínimo). Cpk ≥ 1.67 = excelente (Six Sigma). Con Cpk = 0.65, LabFarma produce aproximadamente 30,000 ppm (partes por millón) de defectos fuera del rango 490-510 mg. En farmacéuticos esto es inaceptable — una tableta de 525 mg (sobredosis) o 475 mg (subdosis) puede dañar al paciente. Acción correctiva: (1) Pausar la producción. (2) Analizar gráficas de control X-barra para identificar causas especiales (nueva materia prima, máquina descalibrada, cambio de temperatura). (3) Corregir el proceso. (4) Producir lote piloto y verificar Cpk > 1.33 antes de reanudar."},
+
+{id:15,v:0,cat:"seg",cl:"tag-seg",catLabel:"Calidad & Control",
+scenario:"Una empresa de zona franca en Santiago está desarrollando un nuevo conector USB-C para exportación. Antes del lanzamiento, quieren identificar proactivamente todos los modos en que este componente podría fallar y su impacto en el cliente.",
+question:"¿Qué herramienta de ingeniería de calidad está diseñada específicamente para el análisis preventivo de fallas en el diseño de productos?",
+options:["Diagrama de Ishikawa (causa-efecto) — para investigar fallas ya ocurridas en producción","AMFE/FMEA de Diseño — identifica fallas potenciales y su impacto ANTES de que ocurran","Gráfica de Control X-barra — para monitorear el proceso durante la producción","Diagrama de Pareto — para priorizar defectos ya ocurridos por frecuencia de aparición"],
+correct:1,
+explanation:"<strong>✓ El AMFE/FMEA de Diseño (Design FMEA)</strong> es la herramienta preventiva por excelencia. Para cada función del conector USB-C, el equipo analiza: (1) Modo de falla potencial — ¿de qué manera puede fallar? (contactos sin conexión, pin doblado, carcasa fracturada). (2) Efecto en el cliente — ¿qué experimenta si falla? (no carga el dispositivo, pérdida de datos, cortocircuito). (3) Causa potencial — ¿por qué podría ocurrir? (tolerancias incorrectas, material inadecuado, tratamiento térmico deficiente). (4) RPN = Severidad × Ocurrencia × Detección (escala 1-10 c/u). (5) Acciones preventivas para los RPN más altos. El FMEA es obligatorio en industria automotriz (IATF 16949) y médica (ISO 13485). El Ishikawa es REACTIVO (investiga lo que ya falló), mientras el FMEA es PROACTIVO (previene antes de que falle)."},
+
+{id:16,v:0,cat:"seg",cl:"tag-seg",catLabel:"Calidad & Control",
+scenario:"DisMercado, distribuidora de alimentos refrigerados en RD, tiene quejas de clientes por productos llegando a temperatura inadecuada. El gerente sospecha que el problema ocurre durante las paradas de los camiones, pero tiene múltiples causas posibles y presupuesto limitado para resolver solo las más críticas.",
+question:"¿Qué herramienta estadística le permitiría al gerente PRIORIZAR cuáles causas generan el 80% de los problemas de ruptura de la cadena de frío?",
+options:["Histograma — para ver la distribución de temperaturas registradas en los camiones","Diagrama de Pareto — identifica el 20% de causas que generan el 80% de los incidentes (Principio 80/20)","Gráfica de control — para monitorear la temperatura en tiempo real durante el transporte","Diagrama de dispersión — para correlacionar temperatura con la hora del día"],
+correct:1,
+explanation:"<strong>✓ El Diagrama de Pareto aplica el Principio de Pareto (80/20)</strong> de Vilfredo Pareto: el 80% de los problemas son causados por el 20% de las causas. Es una herramienta de priorización — dice dónde enfocarse primero con presupuesto limitado. En DisMercado: el equipo recopilaría datos de todas las incidencias durante 1 mes, clasificando por causa: (A) Parada prolongada en entrega, (B) Puerta abierta durante descarga, (C) Falla del equipo de frío, (D) Demoras en almacén del cliente. El diagrama de barras en orden descendente + línea de frecuencia acumulada mostraría si, por ejemplo, la causa A representa el 65% de todos los incidentes. Resolver esa causa primero impacta más que resolver todas las demás juntas — que es exactamente lo que necesita DisMercado con su presupuesto limitado."},
+
+{id:17,v:0,cat:"gest",cl:"tag-gest",catLabel:"Gestión & Estrategia",
+scenario:"BevCorp RD, embotelladora dominicana, quiere expandir su capacidad de 50,000 a 80,000 botellas diarias. Opción A: nueva línea completa (US$2.5 millones). Opción B: ampliar línea existente (US$800,000). El gerente industrial debe recomendar a los accionistas cuál es más rentable a 5 años.",
+question:"¿Cuál es la herramienta financiera principal de la Economía de la Ingeniería para comparar la rentabilidad de estas dos inversiones?",
+options:["Análisis FODA de ambas opciones para evaluar fortalezas y debilidades","Valor Presente Neto (VPN) y Tasa Interna de Retorno (TIR) de cada alternativa","Diagrama de Gantt para planificar la implementación de cada opción","Simulación de Monte Carlo para modelar la demanda futura"],
+correct:1,
+explanation:"<strong>✓ El VPN y la TIR son las herramientas estándar de Economía de la Ingeniería para evaluar inversiones.</strong> VPN trae todos los flujos de efectivo futuros al valor presente de hoy usando la tasa de descuento (WACC o costo de capital de la empresa). Si VPN > 0: la inversión crea valor. Si VPN < 0: destruye valor. La TIR es la tasa de descuento que hace VPN = 0; si TIR > WACC, la inversión es rentable. Para BevCorp: se proyectarían los ingresos adicionales de producir 30,000 botellas más/día, menos los costos operativos adicionales (energía, mano de obra, materiales), durante 5 años. Se descuentan a valor presente y se restan las inversiones iniciales. La opción con mayor VPN positivo es la ganadora. La TIR permite comunicarlo en porcentaje ('esta inversión retorna el 28% anual') — lenguaje que los accionistas entienden directamente."},
+
+{id:18,v:0,cat:"gest",cl:"tag-gest",catLabel:"Gestión & Estrategia",
+scenario:"La gerencia de Textilera Nacional pide al jefe de producción un análisis de eficiencia de las 12 máquinas de la planta. Quieren un número único que refleje simultáneamente cuánto tiempo están disponibles, a qué velocidad producen y qué porcentaje de su producción sale conforme.",
+question:"¿Qué indicador integrado combina disponibilidad, rendimiento y calidad en un solo número para medir la eficiencia real de los equipos?",
+options:["Eficiencia = Producción real ÷ Producción teórica (solo mide velocidad)","OEE (Overall Equipment Effectiveness) = Disponibilidad × Rendimiento × Calidad","Utilización = Horas trabajadas ÷ Horas totales disponibles del período","MTBF (Mean Time Between Failures) — mide el tiempo promedio entre fallas"],
+correct:1,
+explanation:"<strong>✓ El OEE (Overall Equipment Effectiveness) es el indicador estándar internacional (ISO 22400)</strong> para medir la eficiencia real de los equipos de manufactura. Se calcula: OEE = Disponibilidad × Rendimiento × Calidad. Disponibilidad = (Tiempo disponible − Tiempo de paro no planificado) ÷ Tiempo disponible. Rendimiento = Producción real ÷ Producción teórica a velocidad estándar. Calidad = Unidades buenas ÷ Unidades totales producidas. OEE del 100% = máquina funcionando el 100% del tiempo, a velocidad máxima, produciendo solo piezas buenas. El estándar de clase mundial es OEE ≥ 85%. Un OEE del 47% significa que la máquina es verdaderamente productiva solo el 47% del tiempo — hay enorme potencial de mejora sin comprar maquinaria nueva. El OEE permite comparar desempeño entre máquinas, turnos, operarios y plantas."},
+
+{id:19,v:0,cat:"gest",cl:"tag-gest",catLabel:"Gestión & Estrategia",
+scenario:"LOGIPAK, empresa de empaque en zona franca, implementará un nuevo sistema de gestión de almacenes (WMS). Quiere asegurarse de que cuando el sistema falle, el proceso de recuperación sea en menos de 4 horas y no afecte los compromisos con el cliente.",
+question:"¿Qué concepto y norma de gestión de continuidad del negocio debe planificar LOGIPAK antes de implementar el WMS?",
+options:["ISO 9001:2015 — el sistema de calidad cubre automáticamente la continuidad del negocio","Plan de Continuidad del Negocio (BCP) con RTO de 4 horas, alineado con ISO 22301:2019","Un plan de contingencia escrito en papel para cuando falle el sistema digital","Contratar un proveedor con garantía de 99.9% de uptime es suficiente"],
+correct:1,
+explanation:"<strong>✓ ISO 22301:2019 es el estándar para Sistemas de Gestión de Continuidad del Negocio.</strong> Define: RTO (Recovery Time Objective): tiempo máximo tolerable de interrupción = 4 horas para LOGIPAK. RPO (Recovery Point Objective): pérdida máxima de datos tolerable (p.ej., máximo 1 hora de transacciones). El Plan BCP incluye: (1) Procedimientos manuales de respaldo para operar sin el WMS (planillas físicas, etiquetado manual). (2) Protocolo de comunicación de la emergencia (quién llama a quién, en qué orden). (3) Responsables específicos de cada acción de recuperación. (4) Pruebas periódicas del plan con simulacros. Confiar solo en el SLA del proveedor no es suficiente — los SLA compensan económicamente (créditos) pero no recuperan la operación en el tiempo requerido ni evitan las penalizaciones del cliente por entregas tardías."},
+
+{id:20,v:0,cat:"gest",cl:"tag-gest",catLabel:"Gestión & Estrategia",
+scenario:"El director general de ManuRD nota que sus departamentos trabajan en silos: producción persigue cantidad, calidad persigue cero defectos, y logística persigue entregas a tiempo — a veces en conflicto entre sí. Quiere alinear todos los departamentos con la estrategia de crecimiento de la empresa.",
+question:"¿Qué herramienta de gestión estratégica alinea los objetivos de todos los departamentos con la estrategia corporativa usando indicadores en cuatro perspectivas balanceadas?",
+options:["Diagrama de Gantt para planificar todas las actividades de la empresa año a año","Balanced Scorecard (BSC / Cuadro de Mando Integral) de Kaplan y Norton","Análisis FODA trimestral para identificar fortalezas y amenazas del sector","Sistema ERP SAP que integra todos los procesos en una sola plataforma de datos"],
+correct:1,
+explanation:"<strong>✓ El Balanced Scorecard (BSC)</strong>, desarrollado por Kaplan y Norton (Harvard, 1992), traduce la estrategia en objetivos medibles en 4 perspectivas: (1) Financiera — ¿cómo nos ven los accionistas? (margen neto, ROI, crecimiento de ingresos). (2) Cliente — ¿cómo nos perciben los clientes? (satisfacción, tiempo de entrega, tasa de defectos). (3) Procesos Internos — ¿en qué procesos debemos ser excelentes? (OEE, tiempo de ciclo, costo por unidad). (4) Aprendizaje y Crecimiento — ¿cómo mejoramos? (capacitación, innovación, clima laboral). Para ManuRD: el BSC conectaría el objetivo estratégico 'Crecer 20% en ventas' con los KPIs operativos de producción, calidad y logística en un mapa estratégico visual. Cada jefe de departamento vería cómo sus métricas diarias contribuyen a la estrategia global, eliminando el trabajo en silos."}
+];
+
+const VARIANTS=[
+{id:1,v:1,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"Calzados Quisqueya quiere vender en España y Francia, pero sus compradores europeos solicitan un certificado que garantice que su sistema de producción es consistente y existen controles formales de calidad. Sin este certificado, no pueden firmar el contrato de importación.",
+question:"¿Cuál certificación ISO es la puerta de entrada obligatoria para demostrar gestión de calidad en mercados internacionales de exportación?",
+options:["ISO 14001 — gestión ambiental de los procesos productivos de manufactura","ISO 9001:2015 — sistema de gestión de la calidad reconocido mundialmente","ISO 50001 — eficiencia energética en procesos de manufactura","OHSAS 18001 — seguridad ocupacional de los trabajadores en planta"],
+correct:1,
+explanation:"<strong>✓ ISO 9001:2015 es el estándar de calidad más reconocido globalmente.</strong> Exige que la empresa defina sus procesos, establezca indicadores medibles, gestione las no conformidades con acciones correctivas y mejore continuamente. Los auditores de certificación verifican que el sistema existe, funciona y produce resultados reales. Para Calzados Quisqueya: mapear los procesos de corte, aparado y terminado; definir criterios de aceptación para cada operación; capacitar al personal; y pasar una auditoría de certificación por organismos acreditados como Bureau Veritas, SGS o TÜV Rheinland."},
+{id:2,v:1,cat:"iso",cl:"tag-iso",catLabel:"Normas ISO",
+scenario:"Tejidos Santo Domingo tiene 5 trabajadoras con tendinitis diagnosticada. El inspector del Ministerio de Trabajo visitó la planta y emitió un acta de advertencia. La empresa tiene 30 días para presentar un plan de acción en seguridad laboral o enfrenta una multa de RD$500,000.",
+question:"¿Qué norma ISO proporciona el marco estructurado para gestionar la seguridad y salud ocupacional y cumplir con la normativa dominicana?",
+options:["ISO 9001:2015 — mejora procesos pero no aborda riesgos laborales directamente","ISO 45001:2018 — sistema de gestión de seguridad y salud en el trabajo","ISO 14001:2015 — enfocada en impacto ambiental de la operación productiva","ISO 22000 — inocuidad alimentaria, no aplica a manufactura textil"],
+correct:1,
+explanation:"<strong>✓ ISO 45001:2018</strong> reemplazó a OHSAS 18001 y es el estándar actual para gestión de SST. Requiere: identificación sistemática de peligros en cada puesto (agujas, tijeras, polvo de fibra, posturas forzadas), evaluación del nivel de riesgo de cada peligro, implementación de controles preventivos (guardas en máquinas, EPP, rotación de tareas ergonómica), investigación de los incidentes ya ocurridos con análisis de causa raíz, y objetivos de mejora medibles. El plan de acción para el Ministerio quedaría perfectamente estructurado bajo ISO 45001, demostrando un sistema serio y sostenible."},
+{id:8,v:1,cat:"lean",cl:"tag-lean",catLabel:"Manufactura Lean",
+scenario:"MueblesNorte en Moca tiene 22 días de tiempo de entrega pero solo 6 horas de trabajo real en el mueble. Los operarios están parados esperando materiales o la siguiente máquina disponible. La gerencia no sabe visualizar dónde exactamente se pierden esos 21 días y 18 horas de tiempo sin valor agregado.",
+question:"¿Qué herramienta Lean mapea visualmente todo el flujo del proceso para revelar dónde están todos los desperdicios de tiempo?",
+options:["Implementar un sistema kanban digital de inmediato para controlar el inventario","Value Stream Map (VSM) — mapea el flujo de materiales e información para revelar todos los desperdicios","Aplicar 5S primero para organizar el área de trabajo físicamente","Diagrama de Ishikawa para encontrar la causa raíz de los retrasos de entrega"],
+correct:1,
+explanation:"<strong>✓ El VSM (Value Stream Mapping)</strong> dibuja en un solo papel todo el flujo desde la madera que entra hasta el mueble que llega al cliente: tiempos de ciclo de cada operación, inventarios en proceso (los triángulos de kaizen), tiempos de espera entre estaciones, y flujo de información con proveedores y clientes. Al ver el VSM actual de MueblesNorte se hace evidente que el 99% del tiempo (21.75 días de 22) el mueble no se está trabajando — está esperando en cola. El VSM del estado futuro mostraría cómo el proceso debería fluir: celdas de manufactura, flujo continuo, eliminación de colas. Esta visión dirige toda la transformación Lean."},
+{id:9,v:1,cat:"lean",cl:"tag-lean",catLabel:"Manufactura Lean",
+scenario:"ComponentesPR fabrica piezas para neveras. Su cliente Mabe en México necesita 960 piezas por turno de 8 horas, con 20 minutos de descanso y 10 minutos de reunión inicial incluidos en el turno.",
+question:"Calcule el Takt Time de ComponentesPR. ¿Qué significa operativamente ese número para la organización de la línea?",
+options:["Takt Time = 8 horas ÷ 960 = 0.5 minutos = 30 segundos por pieza","Takt Time = (480 − 30) min ÷ 960 piezas = 0.469 min = 28.1 segundos por pieza","Takt Time = 960 piezas ÷ 450 min = 2.13 piezas por minuto","Takt Time no se puede calcular sin saber cuántas máquinas hay disponibles"],
+correct:1,
+explanation:"<strong>✓ Takt Time = Tiempo disponible neto ÷ Demanda.</strong> Tiempo neto = 480 − 20 descanso − 10 reunión = 450 minutos. TT = 450 ÷ 960 = 0.469 min/pieza = 28.1 segundos/pieza. Operativamente: ComponentesPR debe completar una pieza cada 28.1 segundos. Cualquier operación con tiempo de ciclo mayor a 28.1 segundos es el cuello de botella que impide cumplir al cliente. El número de operarios necesarios se calcula: suma de todos los tiempos de ciclo ÷ Takt Time. El Takt Time es el 'latido del corazón' del sistema de producción."},
+{id:14,v:1,cat:"seg",cl:"tag-seg",catLabel:"Calidad & Control",
+scenario:"FarmaNova produce cápsulas de vitamina C de 500 mg. En 15 días de producción, el proceso muestra Cpk = 0.72. La especificación del cliente es 500 mg ± 15 mg. El cliente farmacéutico exige Cpk mínimo de 1.33 para renovar el contrato.",
+question:"¿Qué significa Cpk = 0.72 para FarmaNova y qué necesitan hacer para alcanzar el Cpk mínimo exigido?",
+options:["Cpk 0.72 es aceptable para la industria farmacéutica según estándares internacionales vigentes","Cpk 0.72 indica proceso incapaz — produce demasiados defectos fuera del rango 485-515 mg. Deben reducir la variación (ajustar maquinaria, controlar temperatura, estandarizar materias primas) hasta lograr Cpk ≥ 1.33","Cpk 0.72 significa que el 72% de las cápsulas están dentro de la especificación del cliente","Deben ampliar los límites de especificación a ±20 mg para que el Cpk suba automáticamente"],
+correct:1,
+explanation:"<strong>✓ Cpk = 0.72 indica proceso incapaz.</strong> Cpk mide la capacidad real considerando tanto la variación como el centrado del proceso. Con Cpk = 0.72, FarmaNova produce aproximadamente 10,000-20,000 defectos por millón (ppm) fuera del rango 485-515 mg. Para alcanzar Cpk = 1.33 (~64 ppm), deben: (1) Hacer un estudio Gauge R&R para verificar que el equipo de medición no añade variación artificial. (2) Identificar las fuentes de variación con ANOVA o DOE (diseño de experimentos). (3) Controlar las variables críticas del proceso: temperatura de encapsulación, viscosidad del ingrediente activo, calibración de la dosificadora. Ampliar las especificaciones no es opción — significa entregar al cliente un producto de menor calidad y aumentar el riesgo terapéutico."}
+];
+
+let questions=[], current=0, score=0, isRetry=false;
+const catSt={iso:{c:0,t:0},lean:{c:0,t:0},erg:{c:0,t:0},seg:{c:0,t:0},gest:{c:0,t:0}};
+const catNames={iso:'Normas ISO',lean:'Manufactura Lean',erg:'Ergonomía',seg:'Calidad & Control',gest:'Gestión'};
+
+function init(retry=false){
+  isRetry=retry;
+  questions=[...ALL_Q];
+  if(retry){
+    [1,2,8,9,14].forEach(id=>{
+      const i=questions.findIndex(q=>q.id===id&&q.v===0);
+      const v=VARIANTS.find(q=>q.id===id&&q.v===1);
+      if(i>=0&&v) questions[i]=v;
+    });
+  }
+  questions.sort(()=>Math.random()-0.5);
+  current=0; score=0;
+  Object.keys(catSt).forEach(k=>{catSt[k].c=0;catSt[k].t=0;});
+  render();
+}
+
+function render(){
+  const app=document.getElementById('main');
+  if(current>=questions.length){renderFinal(app);return;}
+  const q=questions[current];
+  const pct=Math.round((current/questions.length)*100);
+  app.innerHTML=`
+    <div class="progress-wrap">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:0.78rem;color:var(--text3)">Progreso</span>
+          <span style="font-size:0.78rem;color:var(--text3)">${current+1} / ${questions.length}</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>
+    <div class="score-pills">
+      <span class="pill pill-ok">✓ ${score} correctas</span>
+      <span class="pill pill-err">✗ ${current-score} incorrectas</span>
+      <span class="pill pill-cat">${q.catLabel}</span>
+    </div>
+    <div class="qcard" id="qcard">
+      <span class="cat-tag ${q.cl}">${q.catLabel}</span>
+      <div class="scenario-box"><strong>Escenario</strong>${q.scenario}</div>
+      <div class="question">${q.question}</div>
+      <div class="options" id="opts">
+        ${q.options.map((o,i)=>`<button class="opt" onclick="answer(${i})"><span class="opt-letter">${String.fromCharCode(65+i)}</span><span>${o}</span></button>`).join('')}
+      </div>
+    </div>`;
+}
+
+function answer(idx){
+  const q=questions[current];
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  const ok=idx===q.correct;
+  if(ok) score++;
+  catSt[q.cat].t++;
+  if(ok) catSt[q.cat].c++;
+  document.querySelectorAll('.opt')[idx].classList.add(ok?'correct':'wrong');
+  if(!ok) document.querySelectorAll('.opt')[q.correct].classList.add('show-answer');
+  const card=document.getElementById('qcard');
+  const ex=document.createElement('div');
+  ex.className=`explanation ${ok?'ok':'err'}`;
+  ex.innerHTML=`${!ok?`<strong>✗ Respuesta correcta: ${String.fromCharCode(65+q.correct)}. ${q.options[q.correct]}</strong>`:''}${q.explanation}`;
+  card.appendChild(ex);
+  const btn=document.createElement('button');
+  btn.className='next-btn';
+  btn.innerHTML=current+1<questions.length?'Siguiente pregunta →':'Ver resultados →';
+  btn.onclick=()=>{current++;render();};
+  card.appendChild(btn);
+}
+
+function renderFinal(app){
+  const pct=Math.round((score/questions.length)*100);
+  const clr=pct>=70?'#20c997':pct>=50?'#fbbf24':'#f87171';
+  const brdr=pct>=70?'#198754':pct>=50?'#d97706':'#dc2626';
+  app.innerHTML=`
+    <div class="qcard final">
+      <div class="score-ring" style="border-color:${brdr}">
+        <span class="score-pct" style="color:${clr}">${pct}%</span>
+        <span class="score-lbl">${score}/${questions.length}</span>
+      </div>
+      <h2>${pct>=90?'Excelente — nivel ingeniero senior':pct>=70?'Bien — sólido conocimiento industrial':pct>=50?'Regular — repasa los temas con más errores':'Refuerza los fundamentos de la carrera'}</h2>
+      <p style="margin-bottom:1.25rem">Completaste las ${questions.length} preguntas del quiz.<br>Revisa las categorías donde tuviste más errores antes de la reunión de pasantía.</p>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-val" style="color:#20c997">${score}</div><div class="stat-name">Correctas</div></div>
+        <div class="stat-box"><div class="stat-val" style="color:#f87171">${questions.length-score}</div><div class="stat-name">Incorrectas</div></div>
+        <div class="stat-box"><div class="stat-val" style="color:${clr}">${pct}%</div><div class="stat-name">Puntuación</div></div>
+      </div>
+      <div class="cat-results">
+        <h3>Resultados por categoría</h3>
+        ${Object.entries(catSt).filter(([k,v])=>v.t>0).map(([k,v])=>{
+          const p=Math.round((v.c/v.t)*100);
+          const c=p>=70?'#20c997':p>=50?'#fbbf24':'#f87171';
+          return `<div class="cat-row">
+            <span class="cat-name">${catNames[k]}</span>
+            <div class="bar-bg"><div class="bar-fill" style="width:${p}%;background:${c}"></div></div>
+            <span class="cat-score">${v.c}/${v.t}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <button class="retry-btn" onclick="init(true)">↺ Repetir quiz (50% preguntas variadas)</button>
+    </div>`;
+}
+
+init(false);
+</script>
+</body>
+</html>
